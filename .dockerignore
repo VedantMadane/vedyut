@@ -1,0 +1,40 @@
+# Rust
+target/
+**/*.rs.bk
+*.pdb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# CI
+.github/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Tests
+tests/
+.coverage
+.pytest_cache/
+
+# UV
+uv.lock

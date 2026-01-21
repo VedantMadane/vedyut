@@ -1,0 +1,27 @@
+[package]
+name = "vedyut-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Main library combining all vedyut modules with Python bindings"
+
+[lib]
+name = "vedyut_core"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+vedyut-lipi = { path = "../vedyut-lipi" }
+vedyut-sandhi = { path = "../vedyut-sandhi" }
+vedyut-prakriya = { path = "../vedyut-prakriya" }
+vedyut-kosha = { path = "../vedyut-kosha" }
+vedyut-cheda = { path = "../vedyut-cheda" }
+vedyut-sanskritify = { path = "../vedyut-sanskritify" }
+
+# PyO3 for Python bindings
+pyo3 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }

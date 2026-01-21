@@ -71,13 +71,13 @@ def transliterate(text: str, from_script: Script, to_script: Script) -> str:
         >>> transliterate("namaste", Script.IAST, Script.TELUGU)
         'నమస్తే'
     """
-    # TODO: Call Rust core when built
-    # from ._core import transliterate as _transliterate
-    # return _transliterate(text, from_script.value, to_script.value)
+    if RUST_AVAILABLE:
+        return _rust_transliterate(text, from_script.value, to_script.value)
     
+    # Fallback to placeholder if Rust not available
     if from_script == to_script:
         return text
-    return f"[TODO: Transliterate '{text}' from {from_script.value} to {to_script.value}]"
+    return f"[Transliterate '{text}' from {from_script.value} to {to_script.value}]"
 
 
 def segment(
@@ -105,11 +105,10 @@ def segment(
         >>> segment("dharmakṣetre kurukṣetre", Script.IAST)
         [['dharmakṣetre', 'kurukṣetre']]
     """
-    # TODO: Call Rust core when built
-    # from ._core import segment as _segment
-    # return _segment(text, script.value, max_results)
+    if RUST_AVAILABLE:
+        return _rust_segment(text, script.value, max_results)
     
-    # Placeholder
+    # Fallback to simple split if Rust not available
     return [text.split()]
 
 
@@ -133,11 +132,10 @@ def analyze(
         >>> analyze("रामः", Script.DEVANAGARI)
         [{'stem': 'राम', 'case': 'nominative', 'number': 'singular', ...}]
     """
-    # TODO: Call Rust core when built
-    # from ._core import analyze as _analyze
-    # return _analyze(word, script.value)
+    if RUST_AVAILABLE:
+        return _rust_analyze(word, script.value)
     
-    # Placeholder
+    # Fallback if Rust not available
     return [{"word": word, "script": script.value}]
 
 
@@ -236,12 +234,17 @@ def sanskritify(
         ...             level="high", use_llm_fallback=True)
         'नमस्कार विश्व'
     """
-    # TODO: Call Rust core when built
-    # from ._core import sanskritify as _sanskritify
-    # return _sanskritify(text, script.value, level, preserve_meaning)
+    if RUST_AVAILABLE:
+        return _rust_sanskritify(
+            text, 
+            script.value, 
+            level, 
+            preserve_meaning, 
+            replace_urdu_arabic
+        )
     
-    # Placeholder
-    return f"[TODO: Sanskritify '{text}' in {script.value} at {level} level]"
+    # Fallback if Rust not available
+    return f"[Sanskritify '{text}' in {script.value} at {level} level]"
 
 
 __all__ = [

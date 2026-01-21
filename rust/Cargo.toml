@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "vedyut-core",
     "vedyut-lipi",
     "vedyut-sandhi",
     "vedyut-prakriya",

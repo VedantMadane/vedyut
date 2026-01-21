@@ -52,9 +52,10 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [tool.maturin]
-features = ["pyo3/extension-module"]
 python-source = "python"
 module-name = "vedyut._core"
+manifest-path = "rust/vedyut-core/Cargo.toml"
+features = ["pyo3/extension-module"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
