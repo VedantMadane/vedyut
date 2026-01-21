@@ -1,0 +1,15 @@
+[package]
+name = "vedyut-lipi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Transliteration library for Sanskrit and Indic scripts"
+
+[dependencies]
+serde = { workspace = true }
+unicode-normalization = { workspace = true }
+rustc-hash = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }

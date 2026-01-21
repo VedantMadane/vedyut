@@ -1,0 +1,76 @@
+[project]
+name = "vedyut"
+version = "0.1.0"
+description = "High-performance Sanskrit NLP toolkit - Rust core + Python bindings"
+authors = [
+    {name = "Vedant Madane", email = "vedant@example.com"}
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+keywords = ["sanskrit", "nlp", "linguistics", "panini", "grammar"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "httpx>=0.24.0",
+    "ruff>=0.1.0",
+]
+llm = [
+    "openai>=1.0.0",
+    "anthropic>=0.5.0",
+    "langchain>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/VedantMadane/vedyut"
+Documentation = "https://vedyut.readthedocs.io"
+Repository = "https://github.com/VedantMadane/vedyut"
+Issues = "https://github.com/VedantMadane/vedyut/issues"
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "vedyut._core"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.coverage.run]
+source = ["python/vedyut"]
+omit = ["*/tests/*"]

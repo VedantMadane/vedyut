@@ -1,0 +1,17 @@
+[package]
+name = "vedyut-cheda"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Sanskrit text segmentation and morphological analysis"
+
+[dependencies]
+vedyut-lipi = { path = "../vedyut-lipi" }
+vedyut-sandhi = { path = "../vedyut-sandhi" }
+vedyut-kosha = { path = "../vedyut-kosha" }
+serde = { workspace = true }
+rustc-hash = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }

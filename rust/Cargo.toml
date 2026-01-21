@@ -1,0 +1,42 @@
+[workspace]
+members = [
+    "vedyut-lipi",
+    "vedyut-sandhi",
+    "vedyut-prakriya",
+    "vedyut-kosha",
+    "vedyut-cheda",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/VedantMadane/vedyut"
+
+[workspace.dependencies]
+# PyO3 for Python bindings
+pyo3 = { version = "0.22", features = ["extension-module"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# String handling
+compact_str = "0.8"
+
+# Unicode
+unicode-normalization = "0.1"
+unicode-segmentation = "1.12"
+
+# Collections
+rustc-hash = "2.0"
+
+# Testing
+criterion = "0.5"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
