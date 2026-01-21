@@ -1,3 +1,9 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
 # Python
 __pycache__/
 *.py[cod]
@@ -16,7 +22,6 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -25,16 +30,6 @@ MANIFEST
 venv/
 ENV/
 env/
-
-# Rust
-target/
-Cargo.lock
-**/*.rs.bk
-*.pdb
-
-# uv
-.python-version
-uv.lock
 
 # IDE
 .vscode/
@@ -45,25 +40,13 @@ uv.lock
 .DS_Store
 
 # Testing
-.pytest_cache/
 .coverage
+.pytest_cache/
 htmlcov/
 .tox/
-.hypothesis/
-
-# FastAPI
-.env
-.env.local
 
 # Documentation
 docs/_build/
-site/
 
-# Data
-data/
-*.csv
-*.json
-*.sqlite
-
-# Logs
-*.log
+# UV
+uv.lock

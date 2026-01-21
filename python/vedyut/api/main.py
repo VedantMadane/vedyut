@@ -218,6 +218,54 @@ async def generate(req: GenerateRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+class SanskritifyRequest(BaseModel):
+    """Request model for sanskritification"""
+    text: str = Field(..., description="Text to sanskritify (any Indian language)")
+    script: str = Field("devanagari", description="Script for input/output")
+    level: str = Field("medium", description="Refinement level: light, medium, high, classical")
+    preserve_meaning: bool = Field(True, description="Preserve original meaning")
+
+
+class SanskritifyResponse(BaseModel):
+    """Response model for sanskritification"""
+    original: str
+    refined: str
+    script: str
+    level: str
+    took_ms: float
+
+
+@app.post("/v1/sanskritify", response_model=SanskritifyResponse)
+async def sanskritify_text(req: SanskritifyRequest):
+    """
+    Make text in any Indian language more like refined Sanskrit
+    
+    Transforms modern colloquial text to use Sanskrit-style vocabulary,
+    grammar patterns, and formal register.
+    
+    Supports ALL Indian scripts: Devanagari, Tamil, Telugu, Malayalam,
+    Kannada, Bengali, Gujarati, Gurmukhi, etc.
+    """
+    start_time = time.time()
+    
+    try:
+        # TODO: Call Rust core for actual sanskritification
+        # Placeholder transformation
+        refined = f"[Sanskritified: {req.text}]"
+        
+        took_ms = (time.time() - start_time) * 1000
+        
+        return SanskritifyResponse(
+            original=req.text,
+            refined=refined,
+            script=req.script,
+            level=req.level,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/metrics")
 async def metrics():
     """Basic API metrics (placeholder)"""

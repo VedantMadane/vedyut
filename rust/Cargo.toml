@@ -5,6 +5,7 @@ members = [
     "vedyut-prakriya",
     "vedyut-kosha",
     "vedyut-cheda",
+    "vedyut-sanskritify",
 ]
 resolver = "2"
 
