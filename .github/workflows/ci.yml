@@ -113,18 +113,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      
-      - name: Build Rust workspace
-        run: cargo build --release
-        working-directory: ./rust
-      
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       
       - name: Set up Python
         run: uv python install 3.12
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Build Rust workspace (PyO3 needs Python)
+        run: cargo build --release
+        working-directory: ./rust
+        env:
+          PYO3_PYTHON: python3.12
       
       - name: Check Python package
         run: uv sync
