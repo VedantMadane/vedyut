@@ -6,6 +6,7 @@
 pub mod schemes;
 pub mod transliterate;
 
+pub use schemes::Scheme;
 pub use transliterate::transliterate;
 
 #[cfg(test)]
