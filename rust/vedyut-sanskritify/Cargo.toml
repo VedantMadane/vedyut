@@ -7,8 +7,8 @@ repository.workspace = true
 description = "Make text in any Indian language more like refined Sanskrit"
 
 [dependencies]
-vedyut-lipi = { path = "../vedyut-lipi" }
-vedyut-kosha = { path = "../vedyut-kosha" }
+vedyut-lipi = { path = "../vedyut-lipi", version = "0.1.0" }
+vedyut-kosha = { path = "../vedyut-kosha", version = "0.1.0" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 rustc-hash = { workspace = true }

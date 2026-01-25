@@ -7,7 +7,7 @@ repository.workspace = true
 description = "High-performance lexicon for Sanskrit"
 
 [dependencies]
-vedyut-lipi = { path = "../vedyut-lipi" }
+vedyut-lipi = { path = "../vedyut-lipi", version = "0.1.0" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 rustc-hash = { workspace = true }

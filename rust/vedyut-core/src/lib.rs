@@ -8,7 +8,7 @@ use vedyut_lipi::Scheme;
 
 /// Python module for vedyut
 #[pymodule]
-fn _core(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Register classes and functions
     m.add_class::<PyScheme>()?;
     m.add_function(wrap_pyfunction!(py_transliterate, m)?)?;
@@ -136,7 +136,7 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
     })?;
 
     if let Some(analysis) = vedyut_cheda::analyze_word(word) {
-        let dict = PyDict::new(py);
+        let dict = PyDict::new_bound(py);
         dict.set_item("word", analysis.word)?;
         dict.set_item("stem", analysis.stem)?;
         dict.set_item("linga", analysis.linga)?;
@@ -158,8 +158,8 @@ mod tests {
     fn test_module_creation() {
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| {
-            let module = PyModule::new(py, "_core").unwrap();
-            assert!(_core(py, module).is_ok());
+            let module = PyModule::new_bound(py, "_core").unwrap();
+            assert!(_core(&module).is_ok());
         });
     }
 }
