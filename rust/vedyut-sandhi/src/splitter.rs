@@ -14,7 +14,7 @@ pub fn split_sandhi(text: &str) -> Vec<(String, String)> {
     // Placeholder: return simple character-based splits
     let mut results = Vec::new();
 
-    for i in 1..text.len() {
+    for (i, _) in text.char_indices().skip(1) {
         let left = &text[..i];
         let right = &text[i..];
         results.push((left.to_string(), right.to_string()));
