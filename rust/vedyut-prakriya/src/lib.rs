@@ -14,6 +14,7 @@ pub mod tinanta;
 pub mod rule;
 pub mod samjna;
 pub mod ac_sandhi;
+mod tests_samjna;
 
 pub use dhatu::Dhatu;
 pub use generator::generate_tinanta;

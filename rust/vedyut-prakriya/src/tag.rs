@@ -33,4 +33,10 @@ pub enum Tag {
     Guna,
     /// Vrddhi applied
     Vrddhi,
+    /// Anunasika
+    Anunasika,
+    /// Sarvanama
+    Sarvanama,
+    /// Avyaya
+    Avyaya,
 }
