@@ -45,4 +45,10 @@ pub enum Tag {
     Atmanepada,
     /// Parasmaipada
     Parasmaipada,
+    /// Feminine
+    Stri,
+    /// Reduplicated
+    Dvitva,
+    /// Lit Lakara
+    Lit,
 }

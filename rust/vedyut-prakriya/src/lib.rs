@@ -14,6 +14,7 @@ pub mod tinanta;
 pub mod rule;
 pub mod samjna;
 pub mod ac_sandhi;
+pub mod hal_sandhi;
 mod tests_samjna;
 mod tests_sandhi;
 

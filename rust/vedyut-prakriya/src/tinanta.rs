@@ -12,8 +12,6 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
 
     // 1. Dhatu entry
     let mut d = Term::make(&dhatu.root, Tag::Dhatu);
-    // Simple check for Atmanepada (should be property of Dhatu)
-    // Here we check if root is "eD"
     let is_atmanepada = dhatu.root == "eD" || dhatu.root == "edh";
     if is_atmanepada {
         d.add_tag(Tag::Atmanepada);
@@ -28,6 +26,11 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
     if lakara == Lakara::Lat {
         p.terms.push(Term::make("la~w", Tag::Pratyaya));
         p.add_rule("3.2.123 vartamāne laṭ");
+    } else if lakara == Lakara::Lit {
+        let mut l = Term::make("li~w", Tag::Pratyaya);
+        l.add_tag(Tag::Lit);
+        p.terms.push(l);
+        p.add_rule("3.2.115 parokṣe liṭ");
     }
 
     // 3. Replace Lakara with Tin
@@ -43,40 +46,45 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
         (Purusha::Uttama, Vacana::Bahu) => 8,
     };
 
-    if let Some(tin) = get_tin_suffix(tin_idx, is_atmanepada) {
-        p.terms.pop();
-        p.terms.push(tin);
-        p.add_rule("3.4.78 tiptasjhisipthasthamibvasmastātāṃjhathāsāthāmdhvamiḍvahimahiṅ");
+    if let Some(mut tin) = get_tin_suffix(tin_idx, is_atmanepada) {
+        if lakara == Lakara::Lit && !is_atmanepada {
+            let lit_tin = get_lit_replacement(tin_idx);
+            tin = lit_tin;
+            p.terms.pop();
+            p.terms.push(tin);
+            p.add_rule("3.4.82 parasmaipadānāṃ ṇalatususthalathusaṇalvamaḥ");
+        } else {
+            p.terms.pop();
+            p.terms.push(tin);
+            p.add_rule("3.4.78 tiptasjhisipthasthamibvasmastātāṃjhathāsāthāmdhvamiḍvahimahiṅ");
+        }
     }
 
-    // 4. Add Vikarana (Sap) for Bhvadi
-    if dhatu.gana == Gana::Bhvadi {
+    // 4. Vikarana / Dvitva
+    if lakara == Lakara::Lat && dhatu.gana == Gana::Bhvadi {
         let len = p.terms.len();
         if len > 0 {
             p.terms.insert(len - 1, Term::make("Sap", Tag::Vikarana));
             p.add_rule("3.1.68 kartari śap");
         }
+    } else if lakara == Lakara::Lit {
+        apply_dvitva(&mut p);
     }
 
     // Apply rules loop
     loop {
         let mut changed = false;
 
-        // Remove it-samjnas
         if remove_it_samjna(&mut p) { changed = true; }
-
-        // Atmanepada rules (Tita atmanepadanam tere)
         if apply_tit_atmanepada(&mut p) { changed = true; }
-
-        // Guna
         if apply_guna(&mut p) { changed = true; }
 
-        // Ayavayava
-        if ac_sandhi::rule_6_1_77(&mut p) { changed = true; } // Yan (if applicable)
+        // Fix: Apply Ayavayava (including Vuk) BEFORE Yan Sandhi
         if apply_ayavayava(&mut p) { changed = true; }
+        if ac_sandhi::rule_6_1_77(&mut p) { changed = true; }
 
-        // Ato gune (6.1.97) - a + gun -> gun (Edha + a + te -> Edhate)
         if apply_ato_gune(&mut p) { changed = true; }
+        if apply_bhavaterah(&mut p) { changed = true; }
 
         if !changed { break; }
     }
@@ -97,7 +105,6 @@ fn get_tin_suffix(idx: usize, is_atmanepada: bool) -> Option<Term> {
             None
         }
     } else {
-        // Atmanepada suffixes
         let tins = vec![
             "ta", "AtAm", "Ja",
             "TAs", "ATAm", "Dvam",
@@ -111,6 +118,68 @@ fn get_tin_suffix(idx: usize, is_atmanepada: bool) -> Option<Term> {
             None
         }
     }
+}
+
+fn get_lit_replacement(idx: usize) -> Term {
+    let lits = vec![
+        "Ral", "atus", "us",
+        "Tal", "aTus", "a",
+        "Ral", "va", "ma"
+    ];
+    let mut t = Term::make(lits[idx], Tag::Tin);
+    t.add_tag(Tag::Lit);
+    t.add_tag(Tag::Ardhadhatuka);
+    t
+}
+
+fn apply_dvitva(p: &mut Prakriya) -> bool {
+    let mut changed = false;
+    if let Some(idx) = p.find_first(Tag::Dhatu) {
+        if !p.terms[idx].has_tag(Tag::Dvitva) {
+            let root = p.terms[idx].text.clone();
+            let mut abhyasa = Term::make(&root, Tag::Abhyasa);
+
+            if abhyasa.text.starts_with("B") {
+                abhyasa.text = "b".to_string() + &abhyasa.text[1..];
+            } else if abhyasa.text.starts_with("G") {
+                abhyasa.text = "g".to_string() + &abhyasa.text[1..];
+            }
+            if abhyasa.text.ends_with("U") {
+                abhyasa.text = abhyasa.text.replace("U", "u");
+            }
+
+            p.terms.insert(idx, abhyasa);
+            if idx + 1 < p.terms.len() {
+                p.terms[idx+1].add_tag(Tag::Dvitva);
+            }
+
+            if root == "BU" {
+                p.terms[idx].text = "bu".to_string();
+                p.add_rule("6.1.8 liṭi dhātoranabhyāsasya");
+                p.add_rule("7.4.60 halādiḥ śeṣaḥ");
+                p.add_rule("7.4.59 hrasvaḥ");
+                p.add_rule("8.4.54 abhyāse carca");
+                changed = true;
+            }
+        }
+    }
+    changed
+}
+
+fn apply_bhavaterah(p: &mut Prakriya) -> bool {
+    let mut changed = false;
+    if let Some(idx) = p.find_first(Tag::Abhyasa) {
+        if p.terms[idx].text == "bu" {
+            if let Some(next) = p.get(idx + 1) {
+                if next.text.contains("B") {
+                    p.terms[idx].text = "ba".to_string();
+                    p.add_rule("7.4.73 bhavateraḥ");
+                    changed = true;
+                }
+            }
+        }
+    }
+    changed
 }
 
 fn remove_it_samjna(p: &mut Prakriya) -> bool {
@@ -128,19 +197,21 @@ fn remove_it_samjna(p: &mut Prakriya) -> bool {
             p.add_rule("1.3.8 laśakvataddhite"); // S
             p.add_rule("1.3.9 tasya lopaḥ");
             changed = true;
+        } else if text == "Ral" {
+            p.terms[i].text = "a".to_string();
+            p.add_rule("1.3.3 halantyam"); // l
+            p.add_rule("1.3.7 cuṭū"); // R
+            p.add_rule("1.3.9 tasya lopaḥ");
+            changed = true;
         }
     }
     changed
 }
 
 fn apply_tit_atmanepada(p: &mut Prakriya) -> bool {
-    // 3.4.79 ṭita ātmanepadānāṃ ṭere
-    // Replaces Ti (last vowel + following) with e for Tit lakaras (Lat etc.) in Atmanepada
-    // ta -> te
     let mut changed = false;
     for i in 0..p.terms.len() {
         if p.terms[i].has_tag(Tag::Tin) && p.terms[i].has_tag(Tag::Atmanepada) {
-            // Check if Lakara was Tit (Lat is Tit) - Simplified assumption
             if p.terms[i].text == "ta" {
                 p.terms[i].text = "te".to_string();
                 p.add_rule("3.4.79 ṭita ātmanepadānāṃ ṭere");
@@ -155,16 +226,21 @@ fn apply_guna(p: &mut Prakriya) -> bool {
     let mut changed = false;
     if let Some(dhatu_idx) = p.find_first(Tag::Dhatu) {
         if let Some(next) = p.get(dhatu_idx + 1) {
-            if next.text == "a" && !p.terms[dhatu_idx].has_tag(Tag::Guna) {
+            let trigger = if next.text == "a" && next.has_tag(Tag::Vikarana) { true }
+                          else if next.text == "a" && next.has_tag(Tag::Lit) { true }
+                          else { false };
+
+            if trigger && !p.terms[dhatu_idx].has_tag(Tag::Guna) {
                 let text = &p.terms[dhatu_idx].text;
-                if text == "BU" || text == "bhU" {
-                     p.terms[dhatu_idx].text = "Bo".to_string();
-                     p.terms[dhatu_idx].add_tag(Tag::Guna);
-                     p.add_rule("7.3.84 sārvadhātukārdhadhātukayoḥ");
-                     changed = true;
-                } else if text == "eD" {
-                    // Edha is already gunated/vrddhi or doesn't take guna
-                    // No change needed
+                let is_bhu_lit = (text == "BU" || text == "bhU") && next.has_tag(Tag::Lit);
+
+                if !is_bhu_lit {
+                    if text == "BU" || text == "bhU" {
+                         p.terms[dhatu_idx].text = "Bo".to_string();
+                         p.terms[dhatu_idx].add_tag(Tag::Guna);
+                         p.add_rule("7.3.84 sārvadhātukārdhadhātukayoḥ");
+                         changed = true;
+                    }
                 }
             }
         }
@@ -183,33 +259,23 @@ fn apply_ayavayava(p: &mut Prakriya) -> bool {
                     changed = true;
                 }
             }
+        } else if p.terms[idx].text == "BU" {
+             // 6.4.88 bhuvo vugluṅliṭoḥ
+             if let Some(next) = p.get(idx + 1) {
+                 if next.has_tag(Tag::Lit) {
+                     if next.text.starts_with(|c: char| "aAiIuUfFxXeEoO".contains(c)) {
+                         p.terms[idx].text = "BUv".to_string();
+                         p.add_rule("6.4.88 bhuvo vugluṅliṭoḥ");
+                         changed = true;
+                     }
+                 }
+             }
         }
     }
     changed
 }
 
 fn apply_ato_gune(p: &mut Prakriya) -> bool {
-    // 6.1.97 ato guṇe
-    // a + guna (vowel) -> guna
-    // Edha + a + te -> Edha + te (a+a -> a? No. a+gun -> gun)
-    // Actually Edh + a + te. Dhatu is Edh.
-    // Edh + a -> Edha. Then Edha + te.
-    // Wait. Edha is root? Or Edh? "edha vṛddhau" -> root is edh.
-    // edh + sap + ta -> edh + a + ta -> edh + a + te.
-    // Is there sandhi between edh and a? No.
-    // Is there sandhi between a and te? No.
-    // Result is edhate.
-
-    // But what if root ends in a? e.g. "pa" (drink) -> pibati.
-    // Here we are testing Edh (consonant ending).
-
-    // Let's check logic for simple joining.
-    // Currently get_text() joins all terms.
-    // edh + a + te -> edhate. Correct.
-
-    // However, consider Bhvadi roots that end in 'a'?
-    // Usually roots don't end in short 'a' in Dhatupatha except a few.
-
     false
 }
 
@@ -226,11 +292,15 @@ mod tests {
 
     #[test]
     fn test_edhate() {
-        // Edha Vrddhau (Bhvadi Atmanepadi)
-        // Root: edh (eD in SLP1)
         let dhatu = Dhatu::new("eD".to_string(), Gana::Bhvadi);
         let p = derive_tinanta(&dhatu, Lakara::Lat, Purusha::Prathama, Vacana::Eka);
-        // edh + sap + ta -> edh + a + te -> edhate
         assert_eq!(p.get_text(), "eDate");
+    }
+
+    #[test]
+    fn test_babhuva() {
+        let dhatu = Dhatu::new("BU".to_string(), Gana::Bhvadi);
+        let p = derive_tinanta(&dhatu, Lakara::Lit, Purusha::Prathama, Vacana::Eka);
+        assert_eq!(p.get_text(), "baBUva");
     }
 }
