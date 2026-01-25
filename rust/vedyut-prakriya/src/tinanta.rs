@@ -5,6 +5,7 @@ use crate::dhatu::Dhatu;
 use crate::dhatu::Gana;
 use crate::lakara::Lakara;
 use crate::generator::{Purusha, Vacana};
+use crate::ac_sandhi;
 
 pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: Vacana) -> Prakriya {
     let mut p = Prakriya::new();
@@ -13,14 +14,13 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
     p.terms.push(Term::make(&dhatu.root, Tag::Dhatu));
     p.add_rule("1.3.1 bhūvādayo dhātavaḥ");
 
-    // 2. Add Lakara (simplified: assume Lat)
+    // 2. Add Lakara
     if lakara == Lakara::Lat {
         p.terms.push(Term::make("la~w", Tag::Pratyaya));
         p.add_rule("3.2.123 vartamāne laṭ");
     }
 
     // 3. Replace Lakara with Tin
-    // Simplified: map Purusha/Vacana to index 0-8
     let tin_idx = match (purusha, vacana) {
         (Purusha::Prathama, Vacana::Eka) => 0,
         (Purusha::Prathama, Vacana::Dvi) => 1,
@@ -34,7 +34,6 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
     };
 
     if let Some(tin) = get_tin_suffix(tin_idx) {
-        // Remove Lat and add Tin
         p.terms.pop();
         p.terms.push(tin);
         p.add_rule("3.4.78 tiptasjhisipthasthamibvasmastātāṃjhathāsāthāmdhvamiḍvahimahiṅ");
@@ -42,7 +41,6 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
 
     // 4. Add Vikarana (Sap) for Bhvadi
     if dhatu.gana == Gana::Bhvadi {
-        // Insert sap before Tin (which is last)
         let len = p.terms.len();
         if len > 0 {
             p.terms.insert(len - 1, Term::make("Sap", Tag::Vikarana));
@@ -61,6 +59,7 @@ pub fn derive_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana: V
         if apply_guna(&mut p) { changed = true; }
 
         // Ayavayava
+        if ac_sandhi::rule_6_1_77(&mut p) { changed = true; } // Yan (if applicable)
         if apply_ayavayava(&mut p) { changed = true; }
 
         if !changed { break; }
@@ -103,22 +102,15 @@ fn remove_it_samjna(p: &mut Prakriya) -> bool {
 }
 
 fn apply_guna(p: &mut Prakriya) -> bool {
-    // Sarvadhatukardhadhatukayoh (7.3.84)
-    // If last letter of Anga is Ik, and followed by Sarvadhatuka/Ardhadhatuka, apply Guna
-    // Anga = everything before the suffix causing the change
-
-    // Check for 'a' (from Sap) which is Sarvadhatuka (Sit)
     let mut changed = false;
-    // We look for Dhatu followed by Vikarana 'a'
-    // This is very specific to Bhvadi for now
-
     // Find Dhatu
     if let Some(dhatu_idx) = p.find_first(Tag::Dhatu) {
         if let Some(next) = p.get(dhatu_idx + 1) {
+            // Check for Sarvadhatuka/Ardhadhatuka
+            // Simplified: Sap 'a' is Sarvadhatuka
             if next.text == "a" && !p.terms[dhatu_idx].has_tag(Tag::Guna) {
-                // Check if Dhatu ends in Ik
                 let text = &p.terms[dhatu_idx].text;
-                if text == "BU" || text == "bhU" { // Handle SLP1
+                if text == "BU" || text == "bhU" {
                      p.terms[dhatu_idx].text = "Bo".to_string();
                      p.terms[dhatu_idx].add_tag(Tag::Guna);
                      p.add_rule("7.3.84 sārvadhātukārdhadhātukayoḥ");
@@ -127,14 +119,13 @@ fn apply_guna(p: &mut Prakriya) -> bool {
             }
         }
     }
-
     changed
 }
 
 fn apply_ayavayava(p: &mut Prakriya) -> bool {
-    // Eco ayavayavah (6.1.78)
-    // e, o, ai, au + ac -> ay, av, Ay, Av
-
+    // Eco ayavayavah logic re-implementation to match new structure if needed
+    // Ideally we should use ac_sandhi module, but that requires specific context matching
+    // For now we keep this custom application for Tinanta
     let mut changed = false;
     if let Some(idx) = p.find_first(Tag::Dhatu) {
         if p.terms[idx].text == "Bo" {

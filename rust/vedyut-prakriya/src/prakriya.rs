@@ -2,9 +2,15 @@ use crate::term::Term;
 use crate::tag::Tag;
 
 #[derive(Debug, Clone)]
+pub struct Step {
+    pub rule: String,
+    pub result: String,
+}
+
+#[derive(Debug, Clone)]
 pub struct Prakriya {
     pub terms: Vec<Term>,
-    pub history: Vec<String>,
+    pub history: Vec<Step>,
 }
 
 impl Prakriya {
@@ -23,7 +29,10 @@ impl Prakriya {
     }
 
     pub fn add_rule(&mut self, rule: &str) {
-        self.history.push(rule.to_string());
+        self.history.push(Step {
+            rule: rule.to_string(),
+            result: self.get_text(),
+        });
     }
 
     pub fn get_text(&self) -> String {
@@ -46,9 +55,33 @@ impl Prakriya {
         self.terms.get_mut(index)
     }
 
+    pub fn has(&self, index: usize, text_pattern: Option<&str>, tag_pattern: Option<Tag>) -> bool {
+        if let Some(term) = self.terms.get(index) {
+            let text_match = match text_pattern {
+                Some(p) => term.text == p,
+                None => true,
+            };
+            let tag_match = match tag_pattern {
+                Some(t) => term.has_tag(t),
+                None => true,
+            };
+            text_match && tag_match
+        } else {
+            false
+        }
+    }
+
     pub fn insert_after(&mut self, index: usize, term: Term) {
-        if index + 1 <= self.terms.len() {
+        if index < self.terms.len() {
             self.terms.insert(index + 1, term);
+        } else if index == self.terms.len() {
+             self.terms.push(term);
+        }
+    }
+
+    pub fn set(&mut self, index: usize, text: &str) {
+        if let Some(term) = self.terms.get_mut(index) {
+            term.set_text(text);
         }
     }
 }
