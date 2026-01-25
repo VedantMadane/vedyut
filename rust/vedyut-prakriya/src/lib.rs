@@ -6,10 +6,27 @@
 pub mod dhatu;
 pub mod generator;
 pub mod lakara;
+pub mod term;
+pub mod tag;
+pub mod prakriya;
+pub mod subanta;
+pub mod tinanta;
+pub mod rule;
+pub mod samjna;
+pub mod ac_sandhi;
+pub mod hal_sandhi;
+mod tests_samjna;
+mod tests_sandhi;
 
 pub use dhatu::Dhatu;
 pub use generator::generate_tinanta;
 pub use lakara::Lakara;
+pub use term::Term;
+pub use tag::Tag;
+pub use prakriya::Prakriya;
+pub use subanta::derive_subanta;
+pub use tinanta::derive_tinanta;
+pub use rule::{Rule, RuleRegistry};
 
 #[cfg(test)]
 mod tests {
