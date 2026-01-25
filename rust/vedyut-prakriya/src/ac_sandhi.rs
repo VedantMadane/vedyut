@@ -1,6 +1,5 @@
 use crate::prakriya::Prakriya;
 use crate::tag::Tag;
-use crate::term::Term;
 
 /// 6.1.101 akaḥ savarṇe dīrghaḥ
 pub fn rule_6_1_101(p: &mut Prakriya) -> bool {
@@ -10,6 +9,7 @@ pub fn rule_6_1_101(p: &mut Prakriya) -> bool {
         let left = &p.terms[i];
         let right = &p.terms[i + 1];
 
+        // Simplified check, normally would check Ac
         let result = match (left.text.as_str(), right.text.as_str()) {
             ("a", "a") | ("a", "A") | ("A", "a") | ("A", "A") => Some("A"),
             ("i", "i") | ("i", "I") | ("I", "i") | ("I", "I") => Some("I"),
@@ -19,7 +19,7 @@ pub fn rule_6_1_101(p: &mut Prakriya) -> bool {
 
         if let Some(res) = result {
              p.terms[i].text = res.to_string();
-             p.terms[i].add_tag(Tag::Guna);
+             p.terms[i].add_tag(Tag::Guna); // Technically Dirgha
              p.terms.remove(i + 1);
              p.add_rule("6.1.101 akaḥ savarṇe dīrghaḥ");
              changed = true;
@@ -29,6 +29,98 @@ pub fn rule_6_1_101(p: &mut Prakriya) -> bool {
     }
     changed
 }
+
+/// 6.1.87 ādguṇaḥ
+pub fn rule_6_1_87(p: &mut Prakriya) -> bool {
+    let mut changed = false;
+    let mut i = 0;
+    while i < p.terms.len().saturating_sub(1) {
+        let left_text = p.terms[i].text.clone();
+        let right_text = p.terms[i+1].text.clone();
+
+        let left_last = left_text.chars().last().unwrap();
+        let right_first = right_text.chars().next().unwrap();
+
+        // a/A + i/u/r/l -> e/o/ar/al
+        // Condition: following is ac
+        if "aA".contains(left_last) && "iIuUfFxX".contains(right_first) {
+             let replacement = match right_first {
+                 'i' | 'I' => "e",
+                 'u' | 'U' => "o",
+                 'f' | 'F' => "ar",
+                 'x' | 'X' => "al",
+                 _ => "",
+             };
+
+             if !replacement.is_empty() {
+                 let new_left = format!("{}{}", &left_text[..left_text.len()-left_last.len_utf8()], replacement);
+                 // Note: right term needs to lose its first char?
+                 // Sandhi merges two sounds.
+                 // Left loses last, Right loses first, both replaced by replacement.
+                 // My previous implementations were a bit simplified.
+                 // Correct logic: Merge (last + first) -> replacement
+
+                 p.terms[i].text = new_left;
+                 // Need to remove first char of right term, or merge entirely if it's single char
+                 // Here we simplify by merging entire terms if right is single char, or handling string manipulation
+                 // For subanta/tinanta, right terms are often suffixes starting with vowel
+
+                 // Let's assume right term loses its first char
+                 let new_right = right_text[right_first.len_utf8()..].to_string();
+                 if new_right.is_empty() {
+                     p.terms.remove(i+1);
+                 } else {
+                     p.terms[i+1].text = new_right;
+                 }
+
+                 p.add_rule("6.1.87 ādguṇaḥ");
+                 changed = true;
+             }
+        }
+        i += 1;
+    }
+    changed
+}
+
+/// 6.1.88 vṛddhireci
+pub fn rule_6_1_88(p: &mut Prakriya) -> bool {
+    let mut changed = false;
+    let mut i = 0;
+    while i < p.terms.len().saturating_sub(1) {
+        let left_text = p.terms[i].text.clone();
+        let right_text = p.terms[i+1].text.clone();
+
+        let left_last = left_text.chars().last().unwrap();
+        let right_first = right_text.chars().next().unwrap();
+
+        // a/A + e/o/ai/au -> ai/au
+        if "aA".contains(left_last) && "eEoO".contains(right_first) {
+             let replacement = match right_first {
+                 'e' | 'E' => "E", // ai
+                 'o' | 'O' => "O", // au
+                 _ => "",
+             };
+
+             if !replacement.is_empty() {
+                 let new_left = format!("{}{}", &left_text[..left_text.len()-left_last.len_utf8()], replacement);
+
+                 p.terms[i].text = new_left;
+                 let new_right = right_text[right_first.len_utf8()..].to_string();
+                 if new_right.is_empty() {
+                     p.terms.remove(i+1);
+                 } else {
+                     p.terms[i+1].text = new_right;
+                 }
+
+                 p.add_rule("6.1.88 vṛddhireci");
+                 changed = true;
+             }
+        }
+        i += 1;
+    }
+    changed
+}
+
 
 /// 6.1.77 iko yaṇaci
 pub fn rule_6_1_77(p: &mut Prakriya) -> bool {

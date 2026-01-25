@@ -2,6 +2,7 @@ use crate::tag::Tag;
 use crate::term::Term;
 use crate::prakriya::Prakriya;
 use crate::ac_sandhi;
+use crate::samjna;
 
 // Export get_sup for use in tests if needed
 pub fn get_sup(vibhakti: usize, vacana: usize) -> Option<Term> {
@@ -23,9 +24,16 @@ pub fn get_sup(vibhakti: usize, vacana: usize) -> Option<Term> {
         "Ni", "os", "sup",
     ];
 
-    let index = vibhakti * 3 + vacana;
+    // Sambuddhi is typically Prathama with specific tag
+    // Here we treat Sambuddhi as separate vibhakti index 7 for simplicity of API
+    let index = if vibhakti == 7 { vacana } else { vibhakti * 3 + vacana };
+
     if index < sups.len() {
-        Some(Term::make(sups[index], Tag::Sup))
+        let mut t = Term::make(sups[index], Tag::Sup);
+        if vibhakti == 7 {
+            t.add_tag(Tag::Sambuddhi);
+        }
+        Some(t)
     } else {
         None
     }
@@ -38,8 +46,15 @@ pub fn derive_subanta(pratipadika: &str, vibhakti: usize, vacana: usize) -> Prak
     p.terms.push(Term::make(pratipadika, Tag::Pratipadika));
     p.add_rule("1.2.45 arthavadadhāturapratyayaḥ prātipadikam");
 
+    // 1b. Add Samjnas (Sarvanama, etc.)
+    samjna::rule_1_1_27(&mut p); // sarvādīni sarvanāmāni
+
     // 2. Add Sup Suffix
     if let Some(sup) = get_sup(vibhakti, vacana) {
+        // Tag Prathama as Sambuddhi if needed (Rule 2.3.49 sambuddhau ca)
+        if vibhakti == 7 {
+             p.add_rule("2.3.49 sambuddhau ca");
+        }
         p.terms.push(sup);
         p.add_rule("4.1.2 svaujasamauṭchaṣṭābhyāmbhisṅebhyāmbhyasṅasibhyāmbhyasṅasosāṅyossup");
     }
@@ -52,19 +67,21 @@ pub fn derive_subanta(pratipadika: &str, vibhakti: usize, vacana: usize) -> Prak
         if remove_it_samjna(&mut p) { changed = true; }
 
         // Specific declension rules
-        // Guna for i/u stems (Hari -> Har+e)
-        // 7.3.108 hrasvasya guṇaḥ (in Sambuddhi)
-        // 7.3.111 gherṅiti (Guna before Nit lakaras)
         if apply_ghi_guna(&mut p) { changed = true; }
+        if apply_jasah_si(&mut p) { changed = true; }
+
+        // Sambuddhi loop (6.1.69)
+        if apply_sambuddhi_lopa(&mut p) { changed = true; }
 
         // Apply Sandhi Rules
-        if ac_sandhi::rule_6_1_101(&mut p) { changed = true; } // Akaḥ savarṇe dīrghaḥ
-        if ac_sandhi::rule_6_1_77(&mut p) { changed = true; } // Iko yaṇaci
-        if ac_sandhi::rule_6_1_78(&mut p) { changed = true; } // Eco ayavayavah
+        if ac_sandhi::rule_6_1_101(&mut p) { changed = true; }
+        if ac_sandhi::rule_6_1_87(&mut p) { changed = true; }
+        if ac_sandhi::rule_6_1_77(&mut p) { changed = true; }
+        if ac_sandhi::rule_6_1_78(&mut p) { changed = true; }
 
         // Apply Visarga Rules
-        if ac_sandhi::rule_8_2_66(&mut p) { changed = true; } // Sasajuṣo ruḥ
-        if ac_sandhi::rule_8_3_15(&mut p) { changed = true; } // Kharavasānayor visarjanīyaḥ
+        if ac_sandhi::rule_8_2_66(&mut p) { changed = true; }
+        if ac_sandhi::rule_8_3_15(&mut p) { changed = true; }
 
         if !changed { break; }
     }
@@ -75,18 +92,44 @@ pub fn derive_subanta(pratipadika: &str, vibhakti: usize, vacana: usize) -> Prak
 fn remove_it_samjna(p: &mut Prakriya) -> bool {
     let mut changed = false;
     for i in 0..p.terms.len() {
-        if p.terms[i].text == "su" {
+        let text = p.terms[i].text.clone();
+        if text == "su" {
             p.terms[i].text = "s".to_string();
             p.terms[i].add_tag(Tag::Pada);
             p.add_rule("1.3.2 upadeśe'janunāsika it");
             p.add_rule("1.3.9 tasya lopaḥ");
             changed = true;
-        } else if p.terms[i].text == "Ne" {
-             // Simplified removal of N for Ne
+        } else if text == "Ne" {
              p.terms[i].text = "e".to_string();
              p.add_rule("1.3.8 laśakvataddhite");
              p.add_rule("1.3.9 tasya lopaḥ");
              changed = true;
+        } else if text == "jas" {
+             p.terms[i].text = "as".to_string();
+             p.add_rule("1.3.7 cuṭū");
+             p.add_rule("1.3.9 tasya lopaḥ");
+             changed = true;
+        } else if text == "Si" {
+             p.terms[i].text = "i".to_string();
+             p.add_rule("1.3.8 laśakvataddhite");
+             p.add_rule("1.3.9 tasya lopaḥ");
+             changed = true;
+        }
+    }
+    changed
+}
+
+fn apply_jasah_si(p: &mut Prakriya) -> bool {
+    let mut changed = false;
+    if let Some(idx) = p.find_first(Tag::Pratipadika) {
+        if p.terms[idx].has_tag(Tag::Sarvanama) && p.terms[idx].text.ends_with('a') {
+            if let Some(next) = p.get(idx + 1) {
+                if next.text == "as" {
+                    p.terms[idx + 1].text = "Si".to_string();
+                    p.add_rule("7.1.17 jasaḥ śī");
+                    changed = true;
+                }
+            }
         }
     }
     changed
@@ -99,10 +142,7 @@ fn apply_ghi_guna(p: &mut Prakriya) -> bool {
         if (text.ends_with('i') || text.ends_with('u')) && !p.terms[idx].has_tag(Tag::Guna) {
             if let Some(next) = p.get(idx + 1) {
                 let suffix = &next.text;
-                // Simplified Nit check: e, as, nas, etc. (after it-removal)
-                // For 'Ne' -> 'e', it is Nit.
                 if suffix == "e" {
-                     // Apply Guna
                      let last_char = text.chars().last().unwrap();
                      let replacement = if last_char == 'i' { "e" } else { "o" };
                      let new_text = format!("{}{}", &text[..text.len()-1], replacement);
@@ -117,13 +157,36 @@ fn apply_ghi_guna(p: &mut Prakriya) -> bool {
     changed
 }
 
+fn apply_sambuddhi_lopa(p: &mut Prakriya) -> bool {
+    // 6.1.69 eṅhrasvāt sambuddheḥ
+    // Delete 'su' (s) if preceded by Eng (e, o) or Hrasva (short vowel) and it is Sambuddhi
+    let mut changed = false;
+    // We look for Sambuddhi tag on suffix
+    if let Some(idx) = p.find_first(Tag::Sambuddhi) {
+        if p.terms[idx].text == "s" {
+            // Check preceding term
+            if idx > 0 {
+                let prev = &p.terms[idx - 1];
+                let last_char = prev.text.chars().last().unwrap();
+                // Check Eng (e, o) or Hrasva (a, i, u, r, l)
+                if "eoaiufx".contains(last_char) {
+                    p.terms.remove(idx);
+                    p.add_rule("6.1.69 eṅhrasvāt sambuddheḥ");
+                    changed = true;
+                }
+            }
+        }
+    }
+    changed
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_rama_su() {
-        let p = derive_subanta("rAma", 0, 0); // Prathama Eka
+        let p = derive_subanta("rAma", 0, 0);
         assert_eq!(p.get_text(), "rAmaH");
     }
 
@@ -131,5 +194,20 @@ mod tests {
     fn test_hari_ne() {
         let p = derive_subanta("hari", 3, 0);
         assert_eq!(p.get_text(), "haraye");
+    }
+
+    #[test]
+    fn test_sarva_jas() {
+        let p = derive_subanta("sarva", 0, 2);
+        assert_eq!(p.get_text(), "sarve");
+    }
+
+    #[test]
+    fn test_he_rama() {
+        // Sambuddhi Eka: Rama + su
+        // 1. Rama + s
+        // 2. Rama (6.1.69 deletes s because 'a' is hrasva)
+        let p = derive_subanta("rAma", 7, 0);
+        assert_eq!(p.get_text(), "rAma");
     }
 }

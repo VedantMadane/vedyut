@@ -39,4 +39,10 @@ pub enum Tag {
     Sarvanama,
     /// Avyaya
     Avyaya,
+    /// Sambuddhi
+    Sambuddhi,
+    /// Atmanepada
+    Atmanepada,
+    /// Parasmaipada
+    Parasmaipada,
 }
