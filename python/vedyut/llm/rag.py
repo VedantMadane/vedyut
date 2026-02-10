@@ -26,6 +26,7 @@ from .client import LLMClient
 @dataclass
 class GrammarChunk:
     """A chunk of grammar text with metadata"""
+
     id: str
     text: str  # The actual content (sūtra + commentary)
     source: str  # "ashtadhyayi", "kashika", "kale", etc.
@@ -37,27 +38,27 @@ class GrammarChunk:
 
 class GrammarRAG:
     """RAG system for Sanskrit grammar treatises
-    
+
     Usage:
         rag = GrammarRAG(data_dir="data/grammar")
         rag.load_texts()  # Load grammar treatises
         rag.build_index()  # Generate embeddings
-        
+
         # Query for relevant rules
         results = rag.query("How to form present tense verbs?", top_k=3)
-        
+
         # Use with LLM
         code = rag.generate_code("Implement sandhi rule for 'a + i → e'")
     """
-    
+
     def __init__(
         self,
         data_dir: str = "data/grammar",
         llm_client: Optional[LLMClient] = None,
-        index_file: str = "grammar_index.json"
+        index_file: str = "grammar_index.json",
     ):
         """Initialize RAG system
-        
+
         Args:
             data_dir: Directory containing grammar text files
             llm_client: LLM client for embeddings and generation
@@ -66,13 +67,13 @@ class GrammarRAG:
         self.data_dir = Path(data_dir)
         self.llm = llm_client or LLMClient()
         self.index_file = self.data_dir / index_file
-        
+
         self.chunks: List[GrammarChunk] = []
         self.chunk_embeddings: Optional[np.ndarray] = None
-    
+
     def load_texts(self):
         """Load grammar treatises from data directory
-        
+
         Expected structure:
             data/grammar/
                 ashtadhyayi.txt       # Sūtras in Sanskrit/SLP1
@@ -85,28 +86,28 @@ class GrammarRAG:
             print(f"Warning: Grammar data directory not found: {self.data_dir}")
             print("Create it and add grammar texts to enable RAG functionality.")
             return
-        
+
         # Load text files
         for file_path in self.data_dir.glob("*.txt"):
             self._load_text_file(file_path)
-        
+
         # Load structured JSON files
         for file_path in self.data_dir.glob("*.json"):
             self._load_json_file(file_path)
-        
+
         print(f"Loaded {len(self.chunks)} grammar chunks from {self.data_dir}")
-    
+
     def _load_text_file(self, file_path: Path):
         """Load and chunk a text file"""
         source = file_path.stem  # e.g., "ashtadhyayi", "kale_grammar"
         language = "sanskrit" if any(x in source for x in ["ashtadhyayi", "kashika"]) else "english"
-        
+
         with open(file_path, encoding="utf-8") as f:
             content = f.read()
-        
+
         # Simple chunking by paragraphs (TODO: improve with sutra-aware chunking)
         paragraphs = [p.strip() for p in content.split("\n\n") if p.strip()]
-        
+
         for i, para in enumerate(paragraphs):
             chunk = GrammarChunk(
                 id=f"{source}_{i}",
@@ -117,10 +118,10 @@ class GrammarRAG:
                 topic=self._infer_topic(para),
             )
             self.chunks.append(chunk)
-    
+
     def _load_json_file(self, file_path: Path):
         """Load structured grammar rules from JSON
-        
+
         Expected format:
         [
             {
@@ -136,7 +137,7 @@ class GrammarRAG:
         """
         with open(file_path, encoding="utf-8") as f:
             data = json.load(f)
-        
+
         for i, rule in enumerate(data):
             # Create chunks for Sanskrit and English versions
             if "sanskrit" in rule:
@@ -149,7 +150,7 @@ class GrammarRAG:
                     language="sanskrit",
                 )
                 self.chunks.append(chunk)
-            
+
             if "english" in rule:
                 chunk = GrammarChunk(
                     id=f"{file_path.stem}_{i}_en",
@@ -160,13 +161,14 @@ class GrammarRAG:
                     language="english",
                 )
                 self.chunks.append(chunk)
-    
+
     def _extract_sutra_number(self, text: str) -> Optional[str]:
         """Extract sūtra number from text (e.g., '1.1.1', '3.2.123')"""
         import re
-        match = re.search(r'\b(\d+\.\d+\.\d+)\b', text[:100])
+
+        match = re.search(r"\b(\d+\.\d+\.\d+)\b", text[:100])
         return match.group(1) if match else None
-    
+
     def _infer_topic(self, text: str) -> Optional[str]:
         """Infer grammatical topic from text content"""
         text_lower = text.lower()
@@ -181,10 +183,10 @@ class GrammarRAG:
         elif any(word in text_lower for word in ["samasa", "समास", "compound"]):
             return "samasa"
         return None
-    
+
     def build_index(self, force_rebuild: bool = False):
         """Generate embeddings for all chunks and build search index
-        
+
         Args:
             force_rebuild: If True, rebuild even if index exists
         """
@@ -193,54 +195,51 @@ class GrammarRAG:
             self._load_index()
             print(f"Loaded existing index from {self.index_file}")
             return
-        
+
         if not self.chunks:
             print("No chunks to index. Run load_texts() first.")
             return
-        
+
         print(f"Generating embeddings for {len(self.chunks)} chunks...")
         texts = [chunk.text for chunk in self.chunks]
-        
+
         # Generate embeddings in batches (API rate limits)
         batch_size = 100
         all_embeddings = []
-        
+
         for i in range(0, len(texts), batch_size):
-            batch = texts[i:i + batch_size]
+            batch = texts[i : i + batch_size]
             embeddings = self.llm.embed(batch)
             all_embeddings.extend(embeddings)
             print(f"  Embedded {min(i + batch_size, len(texts))}/{len(texts)}")
-        
+
         # Store embeddings in chunks
         for chunk, embedding in zip(self.chunks, all_embeddings):
             chunk.embedding = embedding
-        
+
         self.chunk_embeddings = np.array(all_embeddings)
-        
+
         # Save index
         self._save_index()
         print(f"Index saved to {self.index_file}")
-    
+
     def _save_index(self):
         """Save chunks and embeddings to disk"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
-        data = {
-            "chunks": [asdict(chunk) for chunk in self.chunks],
-            "version": "1.0"
-        }
-        
+
+        data = {"chunks": [asdict(chunk) for chunk in self.chunks], "version": "1.0"}
+
         with open(self.index_file, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
-    
+
     def _load_index(self):
         """Load chunks and embeddings from disk"""
         with open(self.index_file, encoding="utf-8") as f:
             data = json.load(f)
-        
+
         self.chunks = [GrammarChunk(**chunk) for chunk in data["chunks"]]
         self.chunk_embeddings = np.array([chunk.embedding for chunk in self.chunks])
-    
+
     def query(
         self,
         query_text: str,
@@ -249,28 +248,28 @@ class GrammarRAG:
         language: Optional[str] = None,
     ) -> List[Tuple[GrammarChunk, float]]:
         """Retrieve most relevant grammar chunks for a query
-        
+
         Args:
             query_text: Natural language query (e.g., "How to form past tense?")
             top_k: Number of results to return
             topic: Filter by topic ("sandhi", "lakara", etc.)
             language: Filter by language ("sanskrit" or "english")
-        
+
         Returns:
             List of (chunk, similarity_score) tuples, sorted by relevance
         """
         if self.chunk_embeddings is None:
             raise ValueError("Index not built. Run build_index() first.")
-        
+
         # Generate query embedding
         query_embedding = self.llm.embed_single(query_text)
         query_vec = np.array(query_embedding)
-        
+
         # Compute cosine similarity
         similarities = np.dot(self.chunk_embeddings, query_vec) / (
             np.linalg.norm(self.chunk_embeddings, axis=1) * np.linalg.norm(query_vec)
         )
-        
+
         # Filter by topic/language if specified
         filtered_indices = []
         for i, chunk in enumerate(self.chunks):
@@ -279,17 +278,17 @@ class GrammarRAG:
             if language and chunk.language != language:
                 continue
             filtered_indices.append(i)
-        
+
         # Get top-k
         if filtered_indices:
             filtered_sims = [(i, similarities[i]) for i in filtered_indices]
             top_indices = sorted(filtered_sims, key=lambda x: x[1], reverse=True)[:top_k]
         else:
             top_indices = [(i, similarities[i]) for i in np.argsort(similarities)[::-1][:top_k]]
-        
+
         results = [(self.chunks[i], float(score)) for i, score in top_indices]
         return results
-    
+
     def generate_code(
         self,
         task_description: str,
@@ -297,12 +296,12 @@ class GrammarRAG:
         language: str = "rust",
     ) -> str:
         """Generate code implementation based on grammar rules
-        
+
         Args:
             task_description: What to implement (e.g., "sandhi rule for a + i")
             context_chunks: Relevant grammar chunks (auto-retrieved if None)
             language: Target programming language
-        
+
         Returns:
             Generated code with comments
         """
@@ -310,13 +309,15 @@ class GrammarRAG:
         if context_chunks is None:
             results = self.query(task_description, top_k=3)
             context_chunks = [chunk for chunk, _ in results]
-        
+
         # Build context from chunks
-        context_text = "\n\n".join([
-            f"[{chunk.source} {chunk.sutra_number or ''}]\n{chunk.text}"
-            for chunk in context_chunks
-        ])
-        
+        context_text = "\n\n".join(
+            [
+                f"[{chunk.source} {chunk.sutra_number or ''}]\n{chunk.text}"
+                for chunk in context_chunks
+            ]
+        )
+
         prompt = f"""You are a Sanskrit NLP expert. Based on these Pāṇinian grammar rules, generate {language} code to implement the requested functionality.
 
 Grammar References:
@@ -332,21 +333,21 @@ Generate clean, well-commented {language} code. Include:
 
 {language.upper()} CODE:
 """
-        
+
         messages = [{"role": "user", "content": prompt}]
         return self.llm.complete(messages, temperature=0.3)
-    
+
     def explain_rule(
         self,
         sutra_number: Optional[str] = None,
         query: Optional[str] = None,
     ) -> str:
         """Get natural language explanation of a grammar rule
-        
+
         Args:
             sutra_number: Specific sūtra (e.g., "1.1.1")
             query: Natural language query (if sutra_number not provided)
-        
+
         Returns:
             Plain English explanation
         """
@@ -361,9 +362,9 @@ Generate clean, well-commented {language} code. Include:
             context_chunks = [chunk for chunk, _ in results]
         else:
             raise ValueError("Provide either sutra_number or query")
-        
+
         context_text = "\n\n".join([chunk.text for chunk in context_chunks])
-        
+
         prompt = f"""Explain this Pāṇinian grammar rule in simple, clear English.
 
 Grammar Text:
@@ -377,6 +378,6 @@ Provide:
 
 EXPLANATION:
 """
-        
+
         messages = [{"role": "user", "content": prompt}]
         return self.llm.complete(messages, temperature=0.5)

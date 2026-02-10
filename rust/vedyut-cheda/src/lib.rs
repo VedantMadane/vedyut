@@ -3,14 +3,12 @@
 //! This crate combines sandhi splitting with lexicon lookup to segment
 //! Sanskrit text into meaningful words.
 
-use vedyut_kosha::Lexicon;
-use vedyut_sandhi::split_sandhi;
-
 pub mod analyzer;
 pub mod segmenter;
 
-pub use analyzer::{analyze, AnalysisResult};
-pub use segmenter::{segment, SegmentResult};
+pub use analyzer::{AnalysisResult, Analyzer};
+// pub use segmenter::{segment, SegmentResult}; // Use module?
+use segmenter::{segment, SegmentResult};
 
 /// Segment Sanskrit text into words
 ///
@@ -23,7 +21,7 @@ pub fn segment_text(text: &str) -> Vec<SegmentResult> {
     segment(text)
 }
 
-/// Analyze morphological features of a word
+/// Analyze morphological features of a word (legacy placeholder)
 ///
 /// # Arguments
 /// * `word` - Sanskrit word to analyze
@@ -31,7 +29,7 @@ pub fn segment_text(text: &str) -> Vec<SegmentResult> {
 /// # Returns
 /// Morphological analysis (vibhakti, linga, vacana, etc.)
 pub fn analyze_word(word: &str) -> Option<AnalysisResult> {
-    analyze(word)
+    analyzer::analyze_placeholder(word)
 }
 
 #[cfg(test)]
@@ -47,7 +45,6 @@ mod tests {
     #[test]
     fn test_analyze_basic() {
         let result = analyze_word("रामः");
-        // Placeholder test - actual analysis would require lexicon
-        assert!(true);
+        assert!(result.is_some());
     }
 }

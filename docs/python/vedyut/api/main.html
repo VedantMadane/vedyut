@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>vedyut.api.main API documentation</title>
+<meta name="description" content="FastAPI application for Vedyut Sanskrit NLP API">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>vedyut.api.main</code></h1>
+</header>
+<section id="section-intro">
+<p>FastAPI application for Vedyut Sanskrit NLP API</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="vedyut.api.main.analyze"><code class="name flex">
+<span>async def <span class="ident">analyze</span></span>(<span>req: <a title="vedyut.api.main.AnalyzeRequest" href="#vedyut.api.main.AnalyzeRequest">AnalyzeRequest</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.post(&#34;/v1/analyze&#34;, response_model=AnalyzeResponse)
+async def analyze(req: AnalyzeRequest):
+    &#34;&#34;&#34;
+    Perform morphological analysis on a Sanskrit word
+
+    Returns possible analyses with grammatical features
+    &#34;&#34;&#34;
+    start_time = time.time()
+
+    try:
+        # TODO: Call Rust core for actual analysis
+        # Placeholder: return mock analysis
+        analyses = [
+            AnalysisResult(
+                lemma=req.word,
+                case=&#34;nominative&#34;,
+                number=&#34;singular&#34;,
+            )
+        ]
+
+        took_ms = (time.time() - start_time) * 1000
+
+        return AnalyzeResponse(
+            word=req.word,
+            analyses=analyses,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))</code></pre>
+</details>
+<div class="desc"><p>Perform morphological analysis on a Sanskrit word</p>
+<p>Returns possible analyses with grammatical features</p></div>
+</dd>
+<dt id="vedyut.api.main.generate"><code class="name flex">
+<span>async def <span class="ident">generate</span></span>(<span>req: <a title="vedyut.api.main.GenerateRequest" href="#vedyut.api.main.GenerateRequest">GenerateRequest</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.post(&#34;/v1/generate&#34;, response_model=GenerateResponse)
+async def generate(req: GenerateRequest):
+    &#34;&#34;&#34;
+    Generate Sanskrit word forms from root + grammatical features
+
+    Generates tiṅanta (verb) forms following Pāṇinian grammar
+    &#34;&#34;&#34;
+    start_time = time.time()
+
+    try:
+        # TODO: Call Rust core for actual generation
+        # Placeholder: return mock form
+        forms = [f&#34;{req.dhatu}+{req.lakara}+{req.purusha}+{req.vacana}&#34;]
+
+        took_ms = (time.time() - start_time) * 1000
+
+        return GenerateResponse(
+            forms=forms,
+            dhatu=req.dhatu,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))</code></pre>
+</details>
+<div class="desc"><p>Generate Sanskrit word forms from root + grammatical features</p>
+<p>Generates tiṅanta (verb) forms following Pāṇinian grammar</p></div>
+</dd>
+<dt id="vedyut.api.main.health"><code class="name flex">
+<span>async def <span class="ident">health</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.get(&#34;/health&#34;)
+async def health():
+    &#34;&#34;&#34;Health check endpoint&#34;&#34;&#34;
+    return {&#34;status&#34;: &#34;ok&#34;, &#34;service&#34;: &#34;vedyut&#34;}</code></pre>
+</details>
+<div class="desc"><p>Health check endpoint</p></div>
+</dd>
+<dt id="vedyut.api.main.metrics"><code class="name flex">
+<span>async def <span class="ident">metrics</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.get(&#34;/metrics&#34;)
+async def metrics():
+    &#34;&#34;&#34;Basic API metrics (placeholder)&#34;&#34;&#34;
+    return {
+        &#34;requests_total&#34;: 0,
+        &#34;avg_latency_ms&#34;: 0,
+        &#34;uptime_seconds&#34;: 0,
+    }</code></pre>
+</details>
+<div class="desc"><p>Basic API metrics (placeholder)</p></div>
+</dd>
+<dt id="vedyut.api.main.root"><code class="name flex">
+<span>async def <span class="ident">root</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.get(&#34;/&#34;)
+async def root():
+    &#34;&#34;&#34;Root endpoint with API information&#34;&#34;&#34;
+    return {
+        &#34;name&#34;: &#34;Vedyut Sanskrit NLP API&#34;,
+        &#34;version&#34;: &#34;0.1.0&#34;,
+        &#34;docs&#34;: &#34;/docs&#34;,
+        &#34;health&#34;: &#34;/health&#34;,
+    }</code></pre>
+</details>
+<div class="desc"><p>Root endpoint with API information</p></div>
+</dd>
+<dt id="vedyut.api.main.sanskritify_text"><code class="name flex">
+<span>async def <span class="ident">sanskritify_text</span></span>(<span>req: <a title="vedyut.api.main.SanskritifyRequest" href="#vedyut.api.main.SanskritifyRequest">SanskritifyRequest</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.post(&#34;/v1/sanskritify&#34;, response_model=SanskritifyResponse)
+async def sanskritify_text(req: SanskritifyRequest):
+    &#34;&#34;&#34;
+    Make text in any Indian language more like refined Sanskrit
+
+    Transforms modern colloquial text to use Sanskrit-style vocabulary,
+    grammar patterns, and formal register.
+
+    Supports ALL Indian scripts: Devanagari, Tamil, Telugu, Malayalam,
+    Kannada, Bengali, Gujarati, Gurmukhi, etc.
+    &#34;&#34;&#34;
+    start_time = time.time()
+
+    try:
+        # TODO: Call Rust core for actual sanskritification
+        # Placeholder transformation
+        refined = f&#34;[Sanskritified: {req.text}]&#34;
+
+        took_ms = (time.time() - start_time) * 1000
+
+        return SanskritifyResponse(
+            original=req.text,
+            refined=refined,
+            script=req.script,
+            level=req.level,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))</code></pre>
+</details>
+<div class="desc"><p>Make text in any Indian language more like refined Sanskrit</p>
+<p>Transforms modern colloquial text to use Sanskrit-style vocabulary,
+grammar patterns, and formal register.</p>
+<p>Supports ALL Indian scripts: Devanagari, Tamil, Telugu, Malayalam,
+Kannada, Bengali, Gujarati, Gurmukhi, etc.</p></div>
+</dd>
+<dt id="vedyut.api.main.segment"><code class="name flex">
+<span>async def <span class="ident">segment</span></span>(<span>req: <a title="vedyut.api.main.SegmentRequest" href="#vedyut.api.main.SegmentRequest">SegmentRequest</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.post(&#34;/v1/segment&#34;, response_model=SegmentResponse)
+async def segment(req: SegmentRequest):
+    &#34;&#34;&#34;
+    Segment Sanskrit text into words
+
+    Returns multiple possible segmentations ranked by likelihood
+    &#34;&#34;&#34;
+    start_time = time.time()
+
+    try:
+        # TODO: Call Rust core for actual segmentation
+        # Placeholder: return mock segmentation
+        segments = [
+            req.text.split(),  # Simple space split as placeholder
+        ]
+
+        took_ms = (time.time() - start_time) * 1000
+
+        return SegmentResponse(
+            segments=segments,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))</code></pre>
+</details>
+<div class="desc"><p>Segment Sanskrit text into words</p>
+<p>Returns multiple possible segmentations ranked by likelihood</p></div>
+</dd>
+<dt id="vedyut.api.main.transliterate"><code class="name flex">
+<span>async def <span class="ident">transliterate</span></span>(<span>req: <a title="vedyut.api.main.TransliterateRequest" href="#vedyut.api.main.TransliterateRequest">TransliterateRequest</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.post(&#34;/v1/transliterate&#34;, response_model=TransliterateResponse)
+async def transliterate(req: TransliterateRequest):
+    &#34;&#34;&#34;
+    Transliterate Sanskrit text between different scripts
+
+    Supported schemes: devanagari, iast, slp1, hk (harvard-kyoto), itrans
+    &#34;&#34;&#34;
+    start_time = time.time()
+
+    try:
+        # TODO: Call Rust core for actual transliteration
+        result = f&#34;[TODO: Transliterate &#39;{req.text}&#39; from {req.from_scheme} to {req.to_scheme}]&#34;
+
+        took_ms = (time.time() - start_time) * 1000
+
+        return TransliterateResponse(
+            result=result,
+            from_scheme=req.from_scheme,
+            to_scheme=req.to_scheme,
+            took_ms=took_ms,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))</code></pre>
+</details>
+<div class="desc"><p>Transliterate Sanskrit text between different scripts</p>
+<p>Supported schemes: devanagari, iast, slp1, hk (harvard-kyoto), itrans</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="vedyut.api.main.AnalysisResult"><code class="flex name class">
+<span>class <span class="ident">AnalysisResult</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AnalysisResult(BaseModel):
+    &#34;&#34;&#34;Morphological analysis result&#34;&#34;&#34;
+    lemma: str
+    case: Optional[str] = None
+    number: Optional[str] = None
+    gender: Optional[str] = None
+    person: Optional[str] = None
+    tense: Optional[str] = None</code></pre>
+</details>
+<div class="desc"><p>Morphological analysis result</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.AnalysisResult.case"><code class="name">var <span class="ident">case</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.gender"><code class="name">var <span class="ident">gender</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.lemma"><code class="name">var <span class="ident">lemma</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.number"><code class="name">var <span class="ident">number</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.person"><code class="name">var <span class="ident">person</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalysisResult.tense"><code class="name">var <span class="ident">tense</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.AnalyzeRequest"><code class="flex name class">
+<span>class <span class="ident">AnalyzeRequest</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AnalyzeRequest(BaseModel):
+    &#34;&#34;&#34;Request model for morphological analysis&#34;&#34;&#34;
+    word: str = Field(..., description=&#34;Sanskrit word to analyze&#34;)
+    scheme: str = Field(&#34;devanagari&#34;, description=&#34;Input script scheme&#34;)</code></pre>
+</details>
+<div class="desc"><p>Request model for morphological analysis</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.AnalyzeRequest.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalyzeRequest.scheme"><code class="name">var <span class="ident">scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalyzeRequest.word"><code class="name">var <span class="ident">word</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.AnalyzeResponse"><code class="flex name class">
+<span>class <span class="ident">AnalyzeResponse</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AnalyzeResponse(BaseModel):
+    &#34;&#34;&#34;Response model for analysis&#34;&#34;&#34;
+    word: str
+    analyses: List[AnalysisResult]
+    took_ms: float</code></pre>
+</details>
+<div class="desc"><p>Response model for analysis</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.AnalyzeResponse.analyses"><code class="name">var <span class="ident">analyses</span> : List[<a title="vedyut.api.main.AnalysisResult" href="#vedyut.api.main.AnalysisResult">AnalysisResult</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalyzeResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalyzeResponse.took_ms"><code class="name">var <span class="ident">took_ms</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.AnalyzeResponse.word"><code class="name">var <span class="ident">word</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.GenerateRequest"><code class="flex name class">
+<span>class <span class="ident">GenerateRequest</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenerateRequest(BaseModel):
+    &#34;&#34;&#34;Request model for word generation&#34;&#34;&#34;
+    dhatu: str = Field(..., description=&#34;Verb root (dhatu)&#34;)
+    lakara: str = Field(..., description=&#34;Tense/mood (lakara)&#34;)
+    purusha: str = Field(..., description=&#34;Person (prathama, madhyama, uttama)&#34;)
+    vacana: str = Field(..., description=&#34;Number (eka, dvi, bahu)&#34;)</code></pre>
+</details>
+<div class="desc"><p>Request model for word generation</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.GenerateRequest.dhatu"><code class="name">var <span class="ident">dhatu</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateRequest.lakara"><code class="name">var <span class="ident">lakara</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateRequest.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateRequest.purusha"><code class="name">var <span class="ident">purusha</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateRequest.vacana"><code class="name">var <span class="ident">vacana</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.GenerateResponse"><code class="flex name class">
+<span>class <span class="ident">GenerateResponse</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenerateResponse(BaseModel):
+    &#34;&#34;&#34;Response model for generation&#34;&#34;&#34;
+    forms: List[str]
+    dhatu: str
+    took_ms: float</code></pre>
+</details>
+<div class="desc"><p>Response model for generation</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.GenerateResponse.dhatu"><code class="name">var <span class="ident">dhatu</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateResponse.forms"><code class="name">var <span class="ident">forms</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.GenerateResponse.took_ms"><code class="name">var <span class="ident">took_ms</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.SanskritifyRequest"><code class="flex name class">
+<span>class <span class="ident">SanskritifyRequest</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SanskritifyRequest(BaseModel):
+    &#34;&#34;&#34;Request model for sanskritification&#34;&#34;&#34;
+    text: str = Field(..., description=&#34;Text to sanskritify (any Indian language)&#34;)
+    script: str = Field(&#34;devanagari&#34;, description=&#34;Script for input/output&#34;)
+    level: str = Field(&#34;medium&#34;, description=&#34;Refinement level: light, medium, high, classical&#34;)
+    preserve_meaning: bool = Field(True, description=&#34;Preserve original meaning&#34;)</code></pre>
+</details>
+<div class="desc"><p>Request model for sanskritification</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.SanskritifyRequest.level"><code class="name">var <span class="ident">level</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyRequest.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyRequest.preserve_meaning"><code class="name">var <span class="ident">preserve_meaning</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyRequest.script"><code class="name">var <span class="ident">script</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyRequest.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse"><code class="flex name class">
+<span>class <span class="ident">SanskritifyResponse</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SanskritifyResponse(BaseModel):
+    &#34;&#34;&#34;Response model for sanskritification&#34;&#34;&#34;
+    original: str
+    refined: str
+    script: str
+    level: str
+    took_ms: float</code></pre>
+</details>
+<div class="desc"><p>Response model for sanskritification</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.SanskritifyResponse.level"><code class="name">var <span class="ident">level</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse.original"><code class="name">var <span class="ident">original</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse.refined"><code class="name">var <span class="ident">refined</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse.script"><code class="name">var <span class="ident">script</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SanskritifyResponse.took_ms"><code class="name">var <span class="ident">took_ms</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.SegmentRequest"><code class="flex name class">
+<span>class <span class="ident">SegmentRequest</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SegmentRequest(BaseModel):
+    &#34;&#34;&#34;Request model for segmentation&#34;&#34;&#34;
+    text: str = Field(..., description=&#34;Sanskrit text to segment&#34;)
+    max_splits: int = Field(10, description=&#34;Maximum number of segmentation options&#34;)
+    scheme: str = Field(&#34;devanagari&#34;, description=&#34;Input script scheme&#34;)</code></pre>
+</details>
+<div class="desc"><p>Request model for segmentation</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.SegmentRequest.max_splits"><code class="name">var <span class="ident">max_splits</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SegmentRequest.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SegmentRequest.scheme"><code class="name">var <span class="ident">scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SegmentRequest.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.SegmentResponse"><code class="flex name class">
+<span>class <span class="ident">SegmentResponse</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SegmentResponse(BaseModel):
+    &#34;&#34;&#34;Response model for segmentation&#34;&#34;&#34;
+    segments: List[List[str]]
+    took_ms: float</code></pre>
+</details>
+<div class="desc"><p>Response model for segmentation</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.SegmentResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SegmentResponse.segments"><code class="name">var <span class="ident">segments</span> : List[List[str]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.SegmentResponse.took_ms"><code class="name">var <span class="ident">took_ms</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.TransliterateRequest"><code class="flex name class">
+<span>class <span class="ident">TransliterateRequest</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TransliterateRequest(BaseModel):
+    &#34;&#34;&#34;Request model for transliteration&#34;&#34;&#34;
+    text: str = Field(..., description=&#34;Text to transliterate&#34;)
+    from_scheme: str = Field(..., description=&#34;Source script (iast, slp1, devanagari, etc.)&#34;)
+    to_scheme: str = Field(..., description=&#34;Target script (iast, slp1, devanagari, etc.)&#34;)</code></pre>
+</details>
+<div class="desc"><p>Request model for transliteration</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.TransliterateRequest.from_scheme"><code class="name">var <span class="ident">from_scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateRequest.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateRequest.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateRequest.to_scheme"><code class="name">var <span class="ident">to_scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="vedyut.api.main.TransliterateResponse"><code class="flex name class">
+<span>class <span class="ident">TransliterateResponse</span></span>
+<span>(</span><span>**data: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TransliterateResponse(BaseModel):
+    &#34;&#34;&#34;Response model for transliteration&#34;&#34;&#34;
+    result: str
+    from_scheme: str
+    to_scheme: str
+    took_ms: float</code></pre>
+</details>
+<div class="desc"><p>Response model for transliteration</p>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<code>ValidationError</code>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><code>self</code> is explicitly positional-only to allow <code>self</code> as a field name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pydantic.main.BaseModel</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.api.main.TransliterateResponse.from_scheme"><code class="name">var <span class="ident">from_scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateResponse.model_config"><code class="name">var <span class="ident">model_config</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateResponse.result"><code class="name">var <span class="ident">result</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateResponse.to_scheme"><code class="name">var <span class="ident">to_scheme</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.api.main.TransliterateResponse.took_ms"><code class="name">var <span class="ident">took_ms</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="vedyut.api" href="index.html">vedyut.api</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="vedyut.api.main.analyze" href="#vedyut.api.main.analyze">analyze</a></code></li>
+<li><code><a title="vedyut.api.main.generate" href="#vedyut.api.main.generate">generate</a></code></li>
+<li><code><a title="vedyut.api.main.health" href="#vedyut.api.main.health">health</a></code></li>
+<li><code><a title="vedyut.api.main.metrics" href="#vedyut.api.main.metrics">metrics</a></code></li>
+<li><code><a title="vedyut.api.main.root" href="#vedyut.api.main.root">root</a></code></li>
+<li><code><a title="vedyut.api.main.sanskritify_text" href="#vedyut.api.main.sanskritify_text">sanskritify_text</a></code></li>
+<li><code><a title="vedyut.api.main.segment" href="#vedyut.api.main.segment">segment</a></code></li>
+<li><code><a title="vedyut.api.main.transliterate" href="#vedyut.api.main.transliterate">transliterate</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="vedyut.api.main.AnalysisResult" href="#vedyut.api.main.AnalysisResult">AnalysisResult</a></code></h4>
+<ul class="two-column">
+<li><code><a title="vedyut.api.main.AnalysisResult.case" href="#vedyut.api.main.AnalysisResult.case">case</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.gender" href="#vedyut.api.main.AnalysisResult.gender">gender</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.lemma" href="#vedyut.api.main.AnalysisResult.lemma">lemma</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.model_config" href="#vedyut.api.main.AnalysisResult.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.number" href="#vedyut.api.main.AnalysisResult.number">number</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.person" href="#vedyut.api.main.AnalysisResult.person">person</a></code></li>
+<li><code><a title="vedyut.api.main.AnalysisResult.tense" href="#vedyut.api.main.AnalysisResult.tense">tense</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.AnalyzeRequest" href="#vedyut.api.main.AnalyzeRequest">AnalyzeRequest</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.AnalyzeRequest.model_config" href="#vedyut.api.main.AnalyzeRequest.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.AnalyzeRequest.scheme" href="#vedyut.api.main.AnalyzeRequest.scheme">scheme</a></code></li>
+<li><code><a title="vedyut.api.main.AnalyzeRequest.word" href="#vedyut.api.main.AnalyzeRequest.word">word</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.AnalyzeResponse" href="#vedyut.api.main.AnalyzeResponse">AnalyzeResponse</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.AnalyzeResponse.analyses" href="#vedyut.api.main.AnalyzeResponse.analyses">analyses</a></code></li>
+<li><code><a title="vedyut.api.main.AnalyzeResponse.model_config" href="#vedyut.api.main.AnalyzeResponse.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.AnalyzeResponse.took_ms" href="#vedyut.api.main.AnalyzeResponse.took_ms">took_ms</a></code></li>
+<li><code><a title="vedyut.api.main.AnalyzeResponse.word" href="#vedyut.api.main.AnalyzeResponse.word">word</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.GenerateRequest" href="#vedyut.api.main.GenerateRequest">GenerateRequest</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.GenerateRequest.dhatu" href="#vedyut.api.main.GenerateRequest.dhatu">dhatu</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateRequest.lakara" href="#vedyut.api.main.GenerateRequest.lakara">lakara</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateRequest.model_config" href="#vedyut.api.main.GenerateRequest.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateRequest.purusha" href="#vedyut.api.main.GenerateRequest.purusha">purusha</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateRequest.vacana" href="#vedyut.api.main.GenerateRequest.vacana">vacana</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.GenerateResponse" href="#vedyut.api.main.GenerateResponse">GenerateResponse</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.GenerateResponse.dhatu" href="#vedyut.api.main.GenerateResponse.dhatu">dhatu</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateResponse.forms" href="#vedyut.api.main.GenerateResponse.forms">forms</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateResponse.model_config" href="#vedyut.api.main.GenerateResponse.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.GenerateResponse.took_ms" href="#vedyut.api.main.GenerateResponse.took_ms">took_ms</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.SanskritifyRequest" href="#vedyut.api.main.SanskritifyRequest">SanskritifyRequest</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.SanskritifyRequest.level" href="#vedyut.api.main.SanskritifyRequest.level">level</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyRequest.model_config" href="#vedyut.api.main.SanskritifyRequest.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyRequest.preserve_meaning" href="#vedyut.api.main.SanskritifyRequest.preserve_meaning">preserve_meaning</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyRequest.script" href="#vedyut.api.main.SanskritifyRequest.script">script</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyRequest.text" href="#vedyut.api.main.SanskritifyRequest.text">text</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.SanskritifyResponse" href="#vedyut.api.main.SanskritifyResponse">SanskritifyResponse</a></code></h4>
+<ul class="two-column">
+<li><code><a title="vedyut.api.main.SanskritifyResponse.level" href="#vedyut.api.main.SanskritifyResponse.level">level</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyResponse.model_config" href="#vedyut.api.main.SanskritifyResponse.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyResponse.original" href="#vedyut.api.main.SanskritifyResponse.original">original</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyResponse.refined" href="#vedyut.api.main.SanskritifyResponse.refined">refined</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyResponse.script" href="#vedyut.api.main.SanskritifyResponse.script">script</a></code></li>
+<li><code><a title="vedyut.api.main.SanskritifyResponse.took_ms" href="#vedyut.api.main.SanskritifyResponse.took_ms">took_ms</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.SegmentRequest" href="#vedyut.api.main.SegmentRequest">SegmentRequest</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.SegmentRequest.max_splits" href="#vedyut.api.main.SegmentRequest.max_splits">max_splits</a></code></li>
+<li><code><a title="vedyut.api.main.SegmentRequest.model_config" href="#vedyut.api.main.SegmentRequest.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.SegmentRequest.scheme" href="#vedyut.api.main.SegmentRequest.scheme">scheme</a></code></li>
+<li><code><a title="vedyut.api.main.SegmentRequest.text" href="#vedyut.api.main.SegmentRequest.text">text</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.SegmentResponse" href="#vedyut.api.main.SegmentResponse">SegmentResponse</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.SegmentResponse.model_config" href="#vedyut.api.main.SegmentResponse.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.SegmentResponse.segments" href="#vedyut.api.main.SegmentResponse.segments">segments</a></code></li>
+<li><code><a title="vedyut.api.main.SegmentResponse.took_ms" href="#vedyut.api.main.SegmentResponse.took_ms">took_ms</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.TransliterateRequest" href="#vedyut.api.main.TransliterateRequest">TransliterateRequest</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.TransliterateRequest.from_scheme" href="#vedyut.api.main.TransliterateRequest.from_scheme">from_scheme</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateRequest.model_config" href="#vedyut.api.main.TransliterateRequest.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateRequest.text" href="#vedyut.api.main.TransliterateRequest.text">text</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateRequest.to_scheme" href="#vedyut.api.main.TransliterateRequest.to_scheme">to_scheme</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="vedyut.api.main.TransliterateResponse" href="#vedyut.api.main.TransliterateResponse">TransliterateResponse</a></code></h4>
+<ul class="">
+<li><code><a title="vedyut.api.main.TransliterateResponse.from_scheme" href="#vedyut.api.main.TransliterateResponse.from_scheme">from_scheme</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateResponse.model_config" href="#vedyut.api.main.TransliterateResponse.model_config">model_config</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateResponse.result" href="#vedyut.api.main.TransliterateResponse.result">result</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateResponse.to_scheme" href="#vedyut.api.main.TransliterateResponse.to_scheme">to_scheme</a></code></li>
+<li><code><a title="vedyut.api.main.TransliterateResponse.took_ms" href="#vedyut.api.main.TransliterateResponse.took_ms">took_ms</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

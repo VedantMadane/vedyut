@@ -96,8 +96,8 @@ impl OriginDetector {
                 // Common Arabic/Persian patterns
                 "al-".to_string(),
                 "ibn-".to_string(),
-                "-ullah".to_string(),
-                "-uddin".to_string(),
+                "ullah".to_string(), // Removed hyphen to catch joined words
+                "uddin".to_string(), // Removed hyphen
             ],
         }
     }
@@ -158,7 +158,7 @@ impl OriginDetector {
         // TODO: Implement actual LLM API calls
         // This is a placeholder for the LLM integration
 
-        let prompt = self.build_prompt(word, options);
+        let _prompt = self.build_prompt(word, options);
 
         match provider {
             LlmProvider::OpenAI { model, api_key: _ } => {

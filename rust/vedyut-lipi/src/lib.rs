@@ -3,6 +3,7 @@
 //! This crate provides efficient transliteration between various scripts
 //! commonly used for Sanskrit text, including Devanagari, IAST, SLP1, and others.
 
+pub mod mappings;
 pub mod schemes;
 pub mod transliterate;
 

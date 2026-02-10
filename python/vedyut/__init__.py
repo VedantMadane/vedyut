@@ -15,11 +15,12 @@ from typing import List, Optional, Dict, Any
 class Script(str, Enum):
     """
     Supported scripts for Sanskrit text.
-    
+
     Script is a FIRST-CLASS parameter in vedyut, not buried in options.
     Every function that deals with script-specific text takes Script as
     an explicit, required parameter.
     """
+
     # Romanization schemes
     IAST = "iast"
     SLP1 = "slp1"
@@ -28,7 +29,7 @@ class Script(str, Enum):
     ISO15919 = "iso15919"
     VELTHUIS = "velthuis"
     WX = "wx"
-    
+
     # Brahmic scripts
     DEVANAGARI = "devanagari"
     TELUGU = "telugu"
@@ -50,30 +51,30 @@ class Script(str, Enum):
 def transliterate(text: str, from_script: Script, to_script: Script) -> str:
     """
     Transliterate Sanskrit text between scripts.
-    
+
     Script is a **first-class parameter** - explicit and required.
-    
+
     Args:
         text: Text to transliterate
         from_script: Source script (first-class parameter!)
         to_script: Target script (first-class parameter!)
-        
+
     Returns:
         Transliterated text
-        
+
     Examples:
         >>> transliterate("namaste", Script.IAST, Script.DEVANAGARI)
         'नमस्ते'
-        
+
         >>> transliterate("namaste", Script.IAST, Script.TAMIL)
         'நமஸ்தே'
-        
+
         >>> transliterate("namaste", Script.IAST, Script.TELUGU)
         'నమస్తే'
     """
     if RUST_AVAILABLE:
         return _rust_transliterate(text, from_script.value, to_script.value)
-    
+
     # Fallback to placeholder if Rust not available
     if from_script == to_script:
         return text
@@ -87,27 +88,27 @@ def segment(
 ) -> List[List[str]]:
     """
     Segment Sanskrit text into words.
-    
+
     Script is explicitly specified (default: Devanagari).
-    
+
     Args:
         text: Sanskrit text to segment
         script: Input script (first-class parameter with sensible default)
         max_results: Maximum number of segmentations to return
-        
+
     Returns:
         List of possible segmentations, each as a list of words
-        
+
     Examples:
         >>> segment("धर्मक्षेत्रे कुरुक्षेत्रे", Script.DEVANAGARI)
         [['धर्मक्षेत्रे', 'कुरुक्षेत्रे']]
-        
+
         >>> segment("dharmakṣetre kurukṣetre", Script.IAST)
         [['dharmakṣetre', 'kurukṣetre']]
     """
     if RUST_AVAILABLE:
         return _rust_segment(text, script.value, max_results)
-    
+
     # Fallback to simple split if Rust not available
     return [text.split()]
 
@@ -118,23 +119,23 @@ def analyze(
 ) -> List[Dict[str, Any]]:
     """
     Analyze morphological features of a Sanskrit word.
-    
+
     Script is explicitly specified (default: Devanagari).
-    
+
     Args:
         word: Sanskrit word to analyze
         script: Input script (first-class parameter)
-        
+
     Returns:
         List of possible analyses with grammatical features
-        
+
     Examples:
         >>> analyze("रामः", Script.DEVANAGARI)
         [{'stem': 'राम', 'case': 'nominative', 'number': 'singular', ...}]
     """
     if RUST_AVAILABLE:
         return _rust_analyze(word, script.value)
-    
+
     # Fallback if Rust not available
     return [{"word": word, "script": script.value}]
 
@@ -148,30 +149,30 @@ def generate_verb(
 ) -> List[str]:
     """
     Generate Sanskrit verb forms from root + grammatical features.
-    
+
     Output script is explicitly specified (default: Devanagari).
-    
+
     Args:
         dhatu: Verb root
         lakara: Tense/mood (lat, lit, lut, etc.)
         purusha: Person (prathama, madhyama, uttama)
         vacana: Number (eka, dvi, bahu)
         output_script: Output script (first-class parameter!)
-        
+
     Returns:
         List of generated forms
-        
+
     Examples:
         >>> generate_verb("भू", "lat", "prathama", "eka", Script.DEVANAGARI)
         ['भवति']
-        
+
         >>> generate_verb("bhū", "lat", "prathama", "eka", Script.IAST)
         ['bhavati']
     """
     # TODO: Call Rust core when built
     # from ._core import generate_verb as _generate
     # return _generate(dhatu, lakara, purusha, vacana, output_script.value)
-    
+
     # Placeholder
     return [f"{dhatu}+{lakara}+{purusha}+{vacana}"]
 
@@ -179,7 +180,7 @@ def generate_verb(
 def list_scripts() -> List[Script]:
     """
     Get all supported scripts.
-    
+
     Returns:
         List of all Script enum values
     """
@@ -197,13 +198,13 @@ def sanskritify(
 ) -> str:
     """
     Make text in any Indian language more like refined Sanskrit.
-    
+
     Transforms modern colloquial text to use Sanskrit-style vocabulary,
     grammar patterns, and formal register. Works with ALL scripts!
-    
+
     **NEW**: Automatically replaces Urdu/Arabic/Persian words with Sanskrit equivalents.
     Uses LLM fallback for words not in vocabulary database.
-    
+
     Args:
         text: Text to sanskritify
         script: Script for input/output (first-class parameter!)
@@ -212,37 +213,31 @@ def sanskritify(
         replace_urdu_arabic: Replace Urdu/Arabic/Persian words with Sanskrit (default: True)
         use_llm_fallback: Use LLM for words not in vocabulary (default: True)
         llm_api_key: API key for LLM provider (OpenAI, Anthropic, etc.)
-        
+
     Returns:
         Sanskritified text
-        
+
     Examples:
         >>> # Basic sanskritification
         >>> sanskritify("hello friend", Script.DEVANAGARI)
         'नमस्ते मित्र'
-        
+
         >>> # Works with any Indian script
         >>> sanskritify("hello friend", Script.TAMIL)
         'நமஸ்தே மித்ர'
-        
+
         >>> # Replace Urdu/Arabic words automatically
         >>> sanskritify("duniya mein kitab", Script.DEVANAGARI)
         'जगत् में पुस्तक'
-        
+
         >>> # High refinement with LLM fallback
-        >>> sanskritify("salaam duniya", Script.DEVANAGARI, 
+        >>> sanskritify("salaam duniya", Script.DEVANAGARI,
         ...             level="high", use_llm_fallback=True)
         'नमस्कार विश्व'
     """
     if RUST_AVAILABLE:
-        return _rust_sanskritify(
-            text, 
-            script.value, 
-            level, 
-            preserve_meaning, 
-            replace_urdu_arabic
-        )
-    
+        return _rust_sanskritify(text, script.value, level, preserve_meaning, replace_urdu_arabic)
+
     # Fallback if Rust not available
     return f"[Sanskritify '{text}' in {script.value} at {level} level]"
 

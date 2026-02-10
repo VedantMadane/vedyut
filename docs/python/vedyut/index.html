@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>vedyut API documentation</title>
+<meta name="description" content="Vedyut - High-performance Sanskrit NLP Toolkit …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>vedyut</code></h1>
+</header>
+<section id="section-intro">
+<p>Vedyut - High-performance Sanskrit NLP Toolkit</p>
+<p>A next-generation Sanskrit NLP toolkit combining Rust performance
+with Python ease-of-use.</p>
+<p>Script is a <strong>first-class parameter</strong> throughout the API.</p>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="vedyut.api" href="api/index.html">vedyut.api</a></code></dt>
+<dd>
+<div class="desc"><p>FastAPI application for Vedyut</p></div>
+</dd>
+<dt><code class="name"><a title="vedyut.llm" href="llm/index.html">vedyut.llm</a></code></dt>
+<dd>
+<div class="desc"><p>LLM integration for Sanskrit NLP with grammar treatise RAG</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="vedyut.analyze"><code class="name flex">
+<span>def <span class="ident">analyze</span></span>(<span>word: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> List[Dict[str, Any]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def analyze(
+    word: str,
+    script: Script = Script.DEVANAGARI,
+) -&gt; List[Dict[str, Any]]:
+    &#34;&#34;&#34;
+    Analyze morphological features of a Sanskrit word.
+
+    Script is explicitly specified (default: Devanagari).
+
+    Args:
+        word: Sanskrit word to analyze
+        script: Input script (first-class parameter)
+
+    Returns:
+        List of possible analyses with grammatical features
+
+    Examples:
+        &gt;&gt;&gt; analyze(&#34;रामः&#34;, Script.DEVANAGARI)
+        [{&#39;stem&#39;: &#39;राम&#39;, &#39;case&#39;: &#39;nominative&#39;, &#39;number&#39;: &#39;singular&#39;, ...}]
+    &#34;&#34;&#34;
+    if RUST_AVAILABLE:
+        return _rust_analyze(word, script.value)
+
+    # Fallback if Rust not available
+    return [{&#34;word&#34;: word, &#34;script&#34;: script.value}]</code></pre>
+</details>
+<div class="desc"><p>Analyze morphological features of a Sanskrit word.</p>
+<p>Script is explicitly specified (default: Devanagari).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>word</code></strong></dt>
+<dd>Sanskrit word to analyze</dd>
+<dt><strong><code>script</code></strong></dt>
+<dd>Input script (first-class parameter)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of possible analyses with grammatical features</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; analyze(&quot;रामः&quot;, Script.DEVANAGARI)
+[{'stem': 'राम', 'case': 'nominative', 'number': 'singular', ...}]
+</code></pre></div>
+</dd>
+<dt id="vedyut.generate_verb"><code class="name flex">
+<span>def <span class="ident">generate_verb</span></span>(<span>dhatu: str,<br>lakara: str,<br>purusha: str,<br>vacana: str,<br>output_script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> List[str]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_verb(
+    dhatu: str,
+    lakara: str,
+    purusha: str,
+    vacana: str,
+    output_script: Script = Script.DEVANAGARI,
+) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Generate Sanskrit verb forms from root + grammatical features.
+
+    Output script is explicitly specified (default: Devanagari).
+
+    Args:
+        dhatu: Verb root
+        lakara: Tense/mood (lat, lit, lut, etc.)
+        purusha: Person (prathama, madhyama, uttama)
+        vacana: Number (eka, dvi, bahu)
+        output_script: Output script (first-class parameter!)
+
+    Returns:
+        List of generated forms
+
+    Examples:
+        &gt;&gt;&gt; generate_verb(&#34;भू&#34;, &#34;lat&#34;, &#34;prathama&#34;, &#34;eka&#34;, Script.DEVANAGARI)
+        [&#39;भवति&#39;]
+
+        &gt;&gt;&gt; generate_verb(&#34;bhū&#34;, &#34;lat&#34;, &#34;prathama&#34;, &#34;eka&#34;, Script.IAST)
+        [&#39;bhavati&#39;]
+    &#34;&#34;&#34;
+    # TODO: Call Rust core when built
+    # from ._core import generate_verb as _generate
+    # return _generate(dhatu, lakara, purusha, vacana, output_script.value)
+
+    # Placeholder
+    return [f&#34;{dhatu}+{lakara}+{purusha}+{vacana}&#34;]</code></pre>
+</details>
+<div class="desc"><p>Generate Sanskrit verb forms from root + grammatical features.</p>
+<p>Output script is explicitly specified (default: Devanagari).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dhatu</code></strong></dt>
+<dd>Verb root</dd>
+<dt><strong><code>lakara</code></strong></dt>
+<dd>Tense/mood (lat, lit, lut, etc.)</dd>
+<dt><strong><code>purusha</code></strong></dt>
+<dd>Person (prathama, madhyama, uttama)</dd>
+<dt><strong><code>vacana</code></strong></dt>
+<dd>Number (eka, dvi, bahu)</dd>
+<dt><strong><code>output_script</code></strong></dt>
+<dd>Output script (first-class parameter!)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of generated forms</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; generate_verb(&quot;भू&quot;, &quot;lat&quot;, &quot;prathama&quot;, &quot;eka&quot;, Script.DEVANAGARI)
+['भवति']
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; generate_verb(&quot;bhū&quot;, &quot;lat&quot;, &quot;prathama&quot;, &quot;eka&quot;, Script.IAST)
+['bhavati']
+</code></pre></div>
+</dd>
+<dt id="vedyut.list_scripts"><code class="name flex">
+<span>def <span class="ident">list_scripts</span></span>(<span>) ‑> List[<a title="vedyut.Script" href="#vedyut.Script">Script</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_scripts() -&gt; List[Script]:
+    &#34;&#34;&#34;
+    Get all supported scripts.
+
+    Returns:
+        List of all Script enum values
+    &#34;&#34;&#34;
+    return list(Script)</code></pre>
+</details>
+<div class="desc"><p>Get all supported scripts.</p>
+<h2 id="returns">Returns</h2>
+<p>List of all Script enum values</p></div>
+</dd>
+<dt id="vedyut.sanskritify"><code class="name flex">
+<span>def <span class="ident">sanskritify</span></span>(<span>text: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI,<br>level: str = 'medium',<br>preserve_meaning: bool = True,<br>replace_urdu_arabic: bool = True,<br>use_llm_fallback: bool = True,<br>llm_api_key: str | None = None) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sanskritify(
+    text: str,
+    script: Script = Script.DEVANAGARI,
+    level: str = &#34;medium&#34;,
+    preserve_meaning: bool = True,
+    replace_urdu_arabic: bool = True,
+    use_llm_fallback: bool = True,
+    llm_api_key: Optional[str] = None,
+) -&gt; str:
+    &#34;&#34;&#34;
+    Make text in any Indian language more like refined Sanskrit.
+
+    Transforms modern colloquial text to use Sanskrit-style vocabulary,
+    grammar patterns, and formal register. Works with ALL scripts!
+
+    **NEW**: Automatically replaces Urdu/Arabic/Persian words with Sanskrit equivalents.
+    Uses LLM fallback for words not in vocabulary database.
+
+    Args:
+        text: Text to sanskritify
+        script: Script for input/output (first-class parameter!)
+        level: Refinement level (&#34;light&#34;, &#34;medium&#34;, &#34;high&#34;, &#34;classical&#34;)
+        preserve_meaning: Preserve original meaning vs. prioritize form
+        replace_urdu_arabic: Replace Urdu/Arabic/Persian words with Sanskrit (default: True)
+        use_llm_fallback: Use LLM for words not in vocabulary (default: True)
+        llm_api_key: API key for LLM provider (OpenAI, Anthropic, etc.)
+
+    Returns:
+        Sanskritified text
+
+    Examples:
+        &gt;&gt;&gt; # Basic sanskritification
+        &gt;&gt;&gt; sanskritify(&#34;hello friend&#34;, Script.DEVANAGARI)
+        &#39;नमस्ते मित्र&#39;
+
+        &gt;&gt;&gt; # Works with any Indian script
+        &gt;&gt;&gt; sanskritify(&#34;hello friend&#34;, Script.TAMIL)
+        &#39;நமஸ்தே மித்ர&#39;
+
+        &gt;&gt;&gt; # Replace Urdu/Arabic words automatically
+        &gt;&gt;&gt; sanskritify(&#34;duniya mein kitab&#34;, Script.DEVANAGARI)
+        &#39;जगत् में पुस्तक&#39;
+
+        &gt;&gt;&gt; # High refinement with LLM fallback
+        &gt;&gt;&gt; sanskritify(&#34;salaam duniya&#34;, Script.DEVANAGARI,
+        ...             level=&#34;high&#34;, use_llm_fallback=True)
+        &#39;नमस्कार विश्व&#39;
+    &#34;&#34;&#34;
+    if RUST_AVAILABLE:
+        return _rust_sanskritify(
+            text,
+            script.value,
+            level,
+            preserve_meaning,
+            replace_urdu_arabic
+        )
+
+    # Fallback if Rust not available
+    return f&#34;[Sanskritify &#39;{text}&#39; in {script.value} at {level} level]&#34;</code></pre>
+</details>
+<div class="desc"><p>Make text in any Indian language more like refined Sanskrit.</p>
+<p>Transforms modern colloquial text to use Sanskrit-style vocabulary,
+grammar patterns, and formal register. Works with ALL scripts!</p>
+<p><strong>NEW</strong>: Automatically replaces Urdu/Arabic/Persian words with Sanskrit equivalents.
+Uses LLM fallback for words not in vocabulary database.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>text</code></strong></dt>
+<dd>Text to sanskritify</dd>
+<dt><strong><code>script</code></strong></dt>
+<dd>Script for input/output (first-class parameter!)</dd>
+<dt><strong><code>level</code></strong></dt>
+<dd>Refinement level ("light", "medium", "high", "classical")</dd>
+<dt><strong><code>preserve_meaning</code></strong></dt>
+<dd>Preserve original meaning vs. prioritize form</dd>
+<dt><strong><code>replace_urdu_arabic</code></strong></dt>
+<dd>Replace Urdu/Arabic/Persian words with Sanskrit (default: True)</dd>
+<dt><strong><code>use_llm_fallback</code></strong></dt>
+<dd>Use LLM for words not in vocabulary (default: True)</dd>
+<dt><strong><code>llm_api_key</code></strong></dt>
+<dd>API key for LLM provider (OpenAI, Anthropic, etc.)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Sanskritified text</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Basic sanskritification
+&gt;&gt;&gt; sanskritify(&quot;hello friend&quot;, Script.DEVANAGARI)
+'नमस्ते मित्र'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Works with any Indian script
+&gt;&gt;&gt; sanskritify(&quot;hello friend&quot;, Script.TAMIL)
+'நமஸ்தே மித்ர'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Replace Urdu/Arabic words automatically
+&gt;&gt;&gt; sanskritify(&quot;duniya mein kitab&quot;, Script.DEVANAGARI)
+'जगत् में पुस्तक'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # High refinement with LLM fallback
+&gt;&gt;&gt; sanskritify(&quot;salaam duniya&quot;, Script.DEVANAGARI,
+...             level=&quot;high&quot;, use_llm_fallback=True)
+'नमस्कार विश्व'
+</code></pre></div>
+</dd>
+<dt id="vedyut.segment"><code class="name flex">
+<span>def <span class="ident">segment</span></span>(<span>text: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI,<br>max_results: int = 10) ‑> List[List[str]]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def segment(
+    text: str,
+    script: Script = Script.DEVANAGARI,
+    max_results: int = 10,
+) -&gt; List[List[str]]:
+    &#34;&#34;&#34;
+    Segment Sanskrit text into words.
+
+    Script is explicitly specified (default: Devanagari).
+
+    Args:
+        text: Sanskrit text to segment
+        script: Input script (first-class parameter with sensible default)
+        max_results: Maximum number of segmentations to return
+
+    Returns:
+        List of possible segmentations, each as a list of words
+
+    Examples:
+        &gt;&gt;&gt; segment(&#34;धर्मक्षेत्रे कुरुक्षेत्रे&#34;, Script.DEVANAGARI)
+        [[&#39;धर्मक्षेत्रे&#39;, &#39;कुरुक्षेत्रे&#39;]]
+
+        &gt;&gt;&gt; segment(&#34;dharmakṣetre kurukṣetre&#34;, Script.IAST)
+        [[&#39;dharmakṣetre&#39;, &#39;kurukṣetre&#39;]]
+    &#34;&#34;&#34;
+    if RUST_AVAILABLE:
+        return _rust_segment(text, script.value, max_results)
+
+    # Fallback to simple split if Rust not available
+    return [text.split()]</code></pre>
+</details>
+<div class="desc"><p>Segment Sanskrit text into words.</p>
+<p>Script is explicitly specified (default: Devanagari).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>text</code></strong></dt>
+<dd>Sanskrit text to segment</dd>
+<dt><strong><code>script</code></strong></dt>
+<dd>Input script (first-class parameter with sensible default)</dd>
+<dt><strong><code>max_results</code></strong></dt>
+<dd>Maximum number of segmentations to return</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of possible segmentations, each as a list of words</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; segment(&quot;धर्मक्षेत्रे कुरुक्षेत्रे&quot;, Script.DEVANAGARI)
+[['धर्मक्षेत्रे', 'कुरुक्षेत्रे']]
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; segment(&quot;dharmakṣetre kurukṣetre&quot;, Script.IAST)
+[['dharmakṣetre', 'kurukṣetre']]
+</code></pre></div>
+</dd>
+<dt id="vedyut.transliterate"><code class="name flex">
+<span>def <span class="ident">transliterate</span></span>(<span>text: str,<br>from_script: <a title="vedyut.Script" href="#vedyut.Script">Script</a>,<br>to_script: <a title="vedyut.Script" href="#vedyut.Script">Script</a>) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transliterate(text: str, from_script: Script, to_script: Script) -&gt; str:
+    &#34;&#34;&#34;
+    Transliterate Sanskrit text between scripts.
+
+    Script is a **first-class parameter** - explicit and required.
+
+    Args:
+        text: Text to transliterate
+        from_script: Source script (first-class parameter!)
+        to_script: Target script (first-class parameter!)
+
+    Returns:
+        Transliterated text
+
+    Examples:
+        &gt;&gt;&gt; transliterate(&#34;namaste&#34;, Script.IAST, Script.DEVANAGARI)
+        &#39;नमस्ते&#39;
+
+        &gt;&gt;&gt; transliterate(&#34;namaste&#34;, Script.IAST, Script.TAMIL)
+        &#39;நமஸ்தே&#39;
+
+        &gt;&gt;&gt; transliterate(&#34;namaste&#34;, Script.IAST, Script.TELUGU)
+        &#39;నమస్తే&#39;
+    &#34;&#34;&#34;
+    if RUST_AVAILABLE:
+        return _rust_transliterate(text, from_script.value, to_script.value)
+
+    # Fallback to placeholder if Rust not available
+    if from_script == to_script:
+        return text
+    return f&#34;[Transliterate &#39;{text}&#39; from {from_script.value} to {to_script.value}]&#34;</code></pre>
+</details>
+<div class="desc"><p>Transliterate Sanskrit text between scripts.</p>
+<p>Script is a <strong>first-class parameter</strong> - explicit and required.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>text</code></strong></dt>
+<dd>Text to transliterate</dd>
+<dt><strong><code>from_script</code></strong></dt>
+<dd>Source script (first-class parameter!)</dd>
+<dt><strong><code>to_script</code></strong></dt>
+<dd>Target script (first-class parameter!)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Transliterated text</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; transliterate(&quot;namaste&quot;, Script.IAST, Script.DEVANAGARI)
+'नमस्ते'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; transliterate(&quot;namaste&quot;, Script.IAST, Script.TAMIL)
+'நமஸ்தே'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; transliterate(&quot;namaste&quot;, Script.IAST, Script.TELUGU)
+'నమస్తే'
+</code></pre></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="vedyut.Script"><code class="flex name class">
+<span>class <span class="ident">Script</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Script(str, Enum):
+    &#34;&#34;&#34;
+    Supported scripts for Sanskrit text.
+
+    Script is a FIRST-CLASS parameter in vedyut, not buried in options.
+    Every function that deals with script-specific text takes Script as
+    an explicit, required parameter.
+    &#34;&#34;&#34;
+    # Romanization schemes
+    IAST = &#34;iast&#34;
+    SLP1 = &#34;slp1&#34;
+    HARVARD_KYOTO = &#34;harvard-kyoto&#34;
+    ITRANS = &#34;itrans&#34;
+    ISO15919 = &#34;iso15919&#34;
+    VELTHUIS = &#34;velthuis&#34;
+    WX = &#34;wx&#34;
+
+    # Brahmic scripts
+    DEVANAGARI = &#34;devanagari&#34;
+    TELUGU = &#34;telugu&#34;
+    TAMIL = &#34;tamil&#34;
+    KANNADA = &#34;kannada&#34;
+    MALAYALAM = &#34;malayalam&#34;
+    BENGALI = &#34;bengali&#34;
+    GUJARATI = &#34;gujarati&#34;
+    GURMUKHI = &#34;gurmukhi&#34;
+    ODIA = &#34;odia&#34;
+    ASSAMESE = &#34;assamese&#34;
+    TIBETAN = &#34;tibetan&#34;
+    SINHALA = &#34;sinhala&#34;
+    BURMESE = &#34;burmese&#34;
+    THAI = &#34;thai&#34;
+    GRANTHA = &#34;grantha&#34;</code></pre>
+</details>
+<div class="desc"><p>Supported scripts for Sanskrit text.</p>
+<p>Script is a FIRST-CLASS parameter in vedyut, not buried in options.
+Every function that deals with script-specific text takes Script as
+an explicit, required parameter.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.str</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="vedyut.Script.ASSAMESE"><code class="name">var <span class="ident">ASSAMESE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.BENGALI"><code class="name">var <span class="ident">BENGALI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.BURMESE"><code class="name">var <span class="ident">BURMESE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.DEVANAGARI"><code class="name">var <span class="ident">DEVANAGARI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.GRANTHA"><code class="name">var <span class="ident">GRANTHA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.GUJARATI"><code class="name">var <span class="ident">GUJARATI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.GURMUKHI"><code class="name">var <span class="ident">GURMUKHI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.HARVARD_KYOTO"><code class="name">var <span class="ident">HARVARD_KYOTO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.IAST"><code class="name">var <span class="ident">IAST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.ISO15919"><code class="name">var <span class="ident">ISO15919</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.ITRANS"><code class="name">var <span class="ident">ITRANS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.KANNADA"><code class="name">var <span class="ident">KANNADA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.MALAYALAM"><code class="name">var <span class="ident">MALAYALAM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.ODIA"><code class="name">var <span class="ident">ODIA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.SINHALA"><code class="name">var <span class="ident">SINHALA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.SLP1"><code class="name">var <span class="ident">SLP1</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.TAMIL"><code class="name">var <span class="ident">TAMIL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.TELUGU"><code class="name">var <span class="ident">TELUGU</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.THAI"><code class="name">var <span class="ident">THAI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.TIBETAN"><code class="name">var <span class="ident">TIBETAN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.VELTHUIS"><code class="name">var <span class="ident">VELTHUIS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="vedyut.Script.WX"><code class="name">var <span class="ident">WX</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="vedyut.api" href="api/index.html">vedyut.api</a></code></li>
+<li><code><a title="vedyut.llm" href="llm/index.html">vedyut.llm</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="vedyut.analyze" href="#vedyut.analyze">analyze</a></code></li>
+<li><code><a title="vedyut.generate_verb" href="#vedyut.generate_verb">generate_verb</a></code></li>
+<li><code><a title="vedyut.list_scripts" href="#vedyut.list_scripts">list_scripts</a></code></li>
+<li><code><a title="vedyut.sanskritify" href="#vedyut.sanskritify">sanskritify</a></code></li>
+<li><code><a title="vedyut.segment" href="#vedyut.segment">segment</a></code></li>
+<li><code><a title="vedyut.transliterate" href="#vedyut.transliterate">transliterate</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="vedyut.Script" href="#vedyut.Script">Script</a></code></h4>
+<ul class="two-column">
+<li><code><a title="vedyut.Script.ASSAMESE" href="#vedyut.Script.ASSAMESE">ASSAMESE</a></code></li>
+<li><code><a title="vedyut.Script.BENGALI" href="#vedyut.Script.BENGALI">BENGALI</a></code></li>
+<li><code><a title="vedyut.Script.BURMESE" href="#vedyut.Script.BURMESE">BURMESE</a></code></li>
+<li><code><a title="vedyut.Script.DEVANAGARI" href="#vedyut.Script.DEVANAGARI">DEVANAGARI</a></code></li>
+<li><code><a title="vedyut.Script.GRANTHA" href="#vedyut.Script.GRANTHA">GRANTHA</a></code></li>
+<li><code><a title="vedyut.Script.GUJARATI" href="#vedyut.Script.GUJARATI">GUJARATI</a></code></li>
+<li><code><a title="vedyut.Script.GURMUKHI" href="#vedyut.Script.GURMUKHI">GURMUKHI</a></code></li>
+<li><code><a title="vedyut.Script.HARVARD_KYOTO" href="#vedyut.Script.HARVARD_KYOTO">HARVARD_KYOTO</a></code></li>
+<li><code><a title="vedyut.Script.IAST" href="#vedyut.Script.IAST">IAST</a></code></li>
+<li><code><a title="vedyut.Script.ISO15919" href="#vedyut.Script.ISO15919">ISO15919</a></code></li>
+<li><code><a title="vedyut.Script.ITRANS" href="#vedyut.Script.ITRANS">ITRANS</a></code></li>
+<li><code><a title="vedyut.Script.KANNADA" href="#vedyut.Script.KANNADA">KANNADA</a></code></li>
+<li><code><a title="vedyut.Script.MALAYALAM" href="#vedyut.Script.MALAYALAM">MALAYALAM</a></code></li>
+<li><code><a title="vedyut.Script.ODIA" href="#vedyut.Script.ODIA">ODIA</a></code></li>
+<li><code><a title="vedyut.Script.SINHALA" href="#vedyut.Script.SINHALA">SINHALA</a></code></li>
+<li><code><a title="vedyut.Script.SLP1" href="#vedyut.Script.SLP1">SLP1</a></code></li>
+<li><code><a title="vedyut.Script.TAMIL" href="#vedyut.Script.TAMIL">TAMIL</a></code></li>
+<li><code><a title="vedyut.Script.TELUGU" href="#vedyut.Script.TELUGU">TELUGU</a></code></li>
+<li><code><a title="vedyut.Script.THAI" href="#vedyut.Script.THAI">THAI</a></code></li>
+<li><code><a title="vedyut.Script.TIBETAN" href="#vedyut.Script.TIBETAN">TIBETAN</a></code></li>
+<li><code><a title="vedyut.Script.VELTHUIS" href="#vedyut.Script.VELTHUIS">VELTHUIS</a></code></li>
+<li><code><a title="vedyut.Script.WX" href="#vedyut.Script.WX">WX</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
