@@ -5,7 +5,9 @@ use serde::{Deserialize, Serialize};
 pub enum Entry {
     Dhatu(DhatuEntry),
     Subanta(SubantaEntry),
+    Tinanta(TinantaEntry),
     Krdanta(KrdantaEntry),
+    Avyaya(AvyayaEntry),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -26,8 +28,22 @@ pub struct SubantaEntry {
     pub stem: String,
     /// Gender
     pub linga: Option<String>,
-    /// Meaning
-    pub artha: Option<String>,
+    /// Case (vibhakti)
+    pub vibhakti: Option<String>,
+    /// Number (vacana)
+    pub vacana: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TinantaEntry {
+    /// Verb root
+    pub root: String,
+    /// Lakara (tense/mood)
+    pub lakara: String,
+    /// Purusha (person)
+    pub purusha: String,
+    /// Vacana (number)
+    pub vacana: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -38,6 +54,12 @@ pub struct KrdantaEntry {
     pub dhatu: String,
     /// Pratyaya (suffix)
     pub pratyaya: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AvyayaEntry {
+    /// Indeclinable word
+    pub word: String,
 }
 
 #[cfg(test)]

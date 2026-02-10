@@ -5,6 +5,7 @@
 
 pub mod schemes;
 pub mod transliterate;
+pub mod mappings;
 
 pub use schemes::Scheme;
 pub use transliterate::transliterate;

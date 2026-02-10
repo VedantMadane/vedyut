@@ -96,8 +96,8 @@ impl OriginDetector {
                 // Common Arabic/Persian patterns
                 "al-".to_string(),
                 "ibn-".to_string(),
-                "-ullah".to_string(),
-                "-uddin".to_string(),
+                "ullah".to_string(), // Removed hyphen to catch joined words
+                "uddin".to_string(), // Removed hyphen
             ],
         }
     }

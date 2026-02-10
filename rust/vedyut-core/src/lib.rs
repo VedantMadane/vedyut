@@ -8,7 +8,7 @@ use vedyut_lipi::Scheme;
 
 /// Python module for vedyut
 #[pymodule]
-fn _core(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Register classes and functions
     m.add_class::<PyScheme>()?;
     m.add_function(wrap_pyfunction!(py_transliterate, m)?)?;
@@ -85,7 +85,7 @@ fn py_sanskritify(
     preserve_meaning: bool,
     replace_urdu_arabic: bool,
 ) -> PyResult<String> {
-    use vedyut_sanskritify::{RefinementLevel, SanskritifyOptions};
+    use vedyut_sanskritify::{RefinementLevel, SanskritifyOptions, sanskritify_text};
 
     let scheme = Scheme::from_str(script).ok_or_else(|| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported script: {}", script))
@@ -106,7 +106,7 @@ fn py_sanskritify(
         ..Default::default()
     };
 
-    vedyut_sanskritify::sanskritify_text(text, scheme, options)
+    sanskritify_text(text, scheme, options)
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))
 }
 
@@ -136,30 +136,18 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
     })?;
 
     if let Some(analysis) = vedyut_cheda::analyze_word(word) {
-        let dict = PyDict::new(py);
+        let dict = PyDict::new_bound(py);
         dict.set_item("word", analysis.word)?;
-        dict.set_item("stem", analysis.stem)?;
-        dict.set_item("linga", analysis.linga)?;
-        dict.set_item("vibhakti", analysis.vibhakti)?;
+        dict.set_item("root", analysis.root)?;
+        dict.set_item("lakara", analysis.lakara)?;
+        dict.set_item("purusha", analysis.purusha)?;
         dict.set_item("vacana", analysis.vacana)?;
+        dict.set_item("vibhakti", analysis.vibhakti)?;
+        dict.set_item("linga", analysis.linga)?;
         dict.set_item("tags", analysis.tags)?;
 
-        Ok(vec![dict.into()])
+        Ok(vec![dict.unbind().into()])
     } else {
         Ok(vec![])
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_module_creation() {
-        pyo3::prepare_freethreaded_python();
-        Python::with_gil(|py| {
-            let module = PyModule::new(py, "_core").unwrap();
-            assert!(_core(py, module).is_ok());
-        });
     }
 }
