@@ -26,11 +26,7 @@ def test_health():
 
 def test_transliterate():
     """Test transliteration endpoint"""
-    payload = {
-        "text": "dharmakṣetre",
-        "from_scheme": "iast",
-        "to_scheme": "devanagari"
-    }
+    payload = {"text": "dharmakṣetre", "from_scheme": "iast", "to_scheme": "devanagari"}
     response = client.post("/v1/transliterate", json=payload)
     assert response.status_code == 200
     data = response.json()
@@ -42,11 +38,7 @@ def test_transliterate():
 
 def test_segment():
     """Test segmentation endpoint"""
-    payload = {
-        "text": "धर्मक्षेत्रे कुरुक्षेत्रे",
-        "max_splits": 10,
-        "scheme": "devanagari"
-    }
+    payload = {"text": "धर्मक्षेत्रे कुरुक्षेत्रे", "max_splits": 10, "scheme": "devanagari"}
     response = client.post("/v1/segment", json=payload)
     assert response.status_code == 200
     data = response.json()
@@ -57,10 +49,7 @@ def test_segment():
 
 def test_analyze():
     """Test morphological analysis endpoint"""
-    payload = {
-        "word": "रामः",
-        "scheme": "devanagari"
-    }
+    payload = {"word": "रामः", "scheme": "devanagari"}
     response = client.post("/v1/analyze", json=payload)
     assert response.status_code == 200
     data = response.json()
@@ -72,12 +61,7 @@ def test_analyze():
 
 def test_generate():
     """Test word generation endpoint"""
-    payload = {
-        "dhatu": "भू",
-        "lakara": "lat",
-        "purusha": "prathama",
-        "vacana": "eka"
-    }
+    payload = {"dhatu": "भू", "lakara": "lat", "purusha": "prathama", "vacana": "eka"}
     response = client.post("/v1/generate", json=payload)
     assert response.status_code == 200
     data = response.json()

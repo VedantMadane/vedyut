@@ -32,7 +32,6 @@ jobs:
       
       - name: Build Python docs
         run: |
-          uv run pip install pdoc3
           uv run pdoc --html python/vedyut --output-dir docs/python
       
       - name: Deploy to GitHub Pages

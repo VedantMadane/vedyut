@@ -26,8 +26,10 @@ app.add_middleware(
 
 # ===== Request/Response Models =====
 
+
 class TransliterateRequest(BaseModel):
     """Request model for transliteration"""
+
     text: str = Field(..., description="Text to transliterate")
     from_scheme: str = Field(..., description="Source script (iast, slp1, devanagari, etc.)")
     to_scheme: str = Field(..., description="Target script (iast, slp1, devanagari, etc.)")
@@ -35,6 +37,7 @@ class TransliterateRequest(BaseModel):
 
 class TransliterateResponse(BaseModel):
     """Response model for transliteration"""
+
     result: str
     from_scheme: str
     to_scheme: str
@@ -43,6 +46,7 @@ class TransliterateResponse(BaseModel):
 
 class SegmentRequest(BaseModel):
     """Request model for segmentation"""
+
     text: str = Field(..., description="Sanskrit text to segment")
     max_splits: int = Field(10, description="Maximum number of segmentation options")
     scheme: str = Field("devanagari", description="Input script scheme")
@@ -50,18 +54,21 @@ class SegmentRequest(BaseModel):
 
 class SegmentResponse(BaseModel):
     """Response model for segmentation"""
+
     segments: List[List[str]]
     took_ms: float
 
 
 class AnalyzeRequest(BaseModel):
     """Request model for morphological analysis"""
+
     word: str = Field(..., description="Sanskrit word to analyze")
     scheme: str = Field("devanagari", description="Input script scheme")
 
 
 class AnalysisResult(BaseModel):
     """Morphological analysis result"""
+
     lemma: str
     case: Optional[str] = None
     number: Optional[str] = None
@@ -72,6 +79,7 @@ class AnalysisResult(BaseModel):
 
 class AnalyzeResponse(BaseModel):
     """Response model for analysis"""
+
     word: str
     analyses: List[AnalysisResult]
     took_ms: float
@@ -79,6 +87,7 @@ class AnalyzeResponse(BaseModel):
 
 class GenerateRequest(BaseModel):
     """Request model for word generation"""
+
     dhatu: str = Field(..., description="Verb root (dhatu)")
     lakara: str = Field(..., description="Tense/mood (lakara)")
     purusha: str = Field(..., description="Person (prathama, madhyama, uttama)")
@@ -87,12 +96,14 @@ class GenerateRequest(BaseModel):
 
 class GenerateResponse(BaseModel):
     """Response model for generation"""
+
     forms: List[str]
     dhatu: str
     took_ms: float
 
 
 # ===== API Endpoints =====
+
 
 @app.get("/")
 async def root():
@@ -115,17 +126,17 @@ async def health():
 async def transliterate(req: TransliterateRequest):
     """
     Transliterate Sanskrit text between different scripts
-    
+
     Supported schemes: devanagari, iast, slp1, hk (harvard-kyoto), itrans
     """
     start_time = time.time()
-    
+
     try:
         # TODO: Call Rust core for actual transliteration
         result = f"[TODO: Transliterate '{req.text}' from {req.from_scheme} to {req.to_scheme}]"
-        
+
         took_ms = (time.time() - start_time) * 1000
-        
+
         return TransliterateResponse(
             result=result,
             from_scheme=req.from_scheme,
@@ -140,20 +151,20 @@ async def transliterate(req: TransliterateRequest):
 async def segment(req: SegmentRequest):
     """
     Segment Sanskrit text into words
-    
+
     Returns multiple possible segmentations ranked by likelihood
     """
     start_time = time.time()
-    
+
     try:
         # TODO: Call Rust core for actual segmentation
         # Placeholder: return mock segmentation
         segments = [
             req.text.split(),  # Simple space split as placeholder
         ]
-        
+
         took_ms = (time.time() - start_time) * 1000
-        
+
         return SegmentResponse(
             segments=segments,
             took_ms=took_ms,
@@ -166,11 +177,11 @@ async def segment(req: SegmentRequest):
 async def analyze(req: AnalyzeRequest):
     """
     Perform morphological analysis on a Sanskrit word
-    
+
     Returns possible analyses with grammatical features
     """
     start_time = time.time()
-    
+
     try:
         # TODO: Call Rust core for actual analysis
         # Placeholder: return mock analysis
@@ -181,9 +192,9 @@ async def analyze(req: AnalyzeRequest):
                 number="singular",
             )
         ]
-        
+
         took_ms = (time.time() - start_time) * 1000
-        
+
         return AnalyzeResponse(
             word=req.word,
             analyses=analyses,
@@ -197,18 +208,18 @@ async def analyze(req: AnalyzeRequest):
 async def generate(req: GenerateRequest):
     """
     Generate Sanskrit word forms from root + grammatical features
-    
+
     Generates tiṅanta (verb) forms following Pāṇinian grammar
     """
     start_time = time.time()
-    
+
     try:
         # TODO: Call Rust core for actual generation
         # Placeholder: return mock form
         forms = [f"{req.dhatu}+{req.lakara}+{req.purusha}+{req.vacana}"]
-        
+
         took_ms = (time.time() - start_time) * 1000
-        
+
         return GenerateResponse(
             forms=forms,
             dhatu=req.dhatu,
@@ -220,6 +231,7 @@ async def generate(req: GenerateRequest):
 
 class SanskritifyRequest(BaseModel):
     """Request model for sanskritification"""
+
     text: str = Field(..., description="Text to sanskritify (any Indian language)")
     script: str = Field("devanagari", description="Script for input/output")
     level: str = Field("medium", description="Refinement level: light, medium, high, classical")
@@ -228,6 +240,7 @@ class SanskritifyRequest(BaseModel):
 
 class SanskritifyResponse(BaseModel):
     """Response model for sanskritification"""
+
     original: str
     refined: str
     script: str
@@ -239,22 +252,22 @@ class SanskritifyResponse(BaseModel):
 async def sanskritify_text(req: SanskritifyRequest):
     """
     Make text in any Indian language more like refined Sanskrit
-    
+
     Transforms modern colloquial text to use Sanskrit-style vocabulary,
     grammar patterns, and formal register.
-    
+
     Supports ALL Indian scripts: Devanagari, Tamil, Telugu, Malayalam,
     Kannada, Bengali, Gujarati, Gurmukhi, etc.
     """
     start_time = time.time()
-    
+
     try:
         # TODO: Call Rust core for actual sanskritification
         # Placeholder transformation
         refined = f"[Sanskritified: {req.text}]"
-        
+
         took_ms = (time.time() - start_time) * 1000
-        
+
         return SanskritifyResponse(
             original=req.text,
             refined=refined,
@@ -278,4 +291,5 @@ async def metrics():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
