@@ -213,7 +213,7 @@ impl VocabularyTransformer {
     }
 
     /// Select appropriate replacement based on refinement level
-    fn select_replacement(&self, options: &[String], level: RefinementLevel) -> &str {
+    fn select_replacement<'a>(&self, options: &'a [String], level: RefinementLevel) -> &'a str {
         if options.is_empty() {
             return "";
         }

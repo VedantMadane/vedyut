@@ -1,9 +1,9 @@
 //! Text segmentation logic
-
 use serde::{Deserialize, Serialize};
+use vedyut_kosha::Lexicon;
 use vedyut_sandhi::split_sandhi;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct SegmentResult {
     /// The segmented words
     pub words: Vec<String>,
@@ -11,48 +11,126 @@ pub struct SegmentResult {
     pub score: f64,
 }
 
-/// Segment text into words using sandhi splitting
-pub fn segment(text: &str) -> Vec<SegmentResult> {
-    // TODO: Implement beam search with lexicon validation
-    // For now, provide a basic implementation
+pub struct Segmenter {
+    lexicon: Lexicon,
+}
 
-    let mut results = Vec::new();
-
-    // Try splitting at each position
-    let splits = split_sandhi(text);
-
-    for (left, right) in splits.iter().take(10) {
-        results.push(SegmentResult {
-            words: vec![left.clone(), right.clone()],
-            score: 0.5, // Placeholder score
-        });
+impl Segmenter {
+    pub fn new(lexicon: Lexicon) -> Self {
+        Self { lexicon }
     }
 
-    // Also include the original text as a single word
-    results.push(SegmentResult {
-        words: vec![text.to_string()],
-        score: 0.3,
-    });
+    /// Segment text into words using sandhi splitting
+    pub fn segment(&self, text: &str) -> Vec<SegmentResult> {
+        let mut results = Vec::new();
 
-    // Sort by score descending
-    results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
+        let paths = self.find_valid_paths(text, 0);
 
-    results
+        for path in paths {
+            // Calculate a score
+            // Heuristic: Prefer fewer words (Longer matches)
+            let score = 1.0 / (path.len() as f64);
+            results.push(SegmentResult { words: path, score });
+        }
+
+        // Sort by score descending
+        results.sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        results
+    }
+
+    fn find_valid_paths(&self, text: &str, depth: usize) -> Vec<Vec<String>> {
+        if depth > 5 {
+            return Vec::new();
+        }
+        let mut paths = Vec::new();
+
+        // 1. Whole word check
+        if self.lexicon.contains(text) {
+            paths.push(vec![text.to_string()]);
+        }
+
+        // 2. Split check
+        let splits = split_sandhi(text);
+        for (left, right) in splits {
+            // Check if left is valid word
+            if self.lexicon.contains(&left) {
+                // Recurse on right
+                let right_paths = self.find_valid_paths(&right, depth + 1);
+                for path in right_paths {
+                    let mut full_path = vec![left.clone()];
+                    full_path.extend(path);
+                    paths.push(full_path);
+                }
+            }
+        }
+
+        paths
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use vedyut_kosha::entries::{DhatuEntry, Entry};
 
-    #[test]
-    fn test_segment_returns_results() {
-        let results = segment("test");
-        assert!(!results.is_empty());
+    fn create_mock_lexicon() -> Lexicon {
+        let mut lex = Lexicon::new();
+        // Add "devAlaya" parts
+        // "deva", "Alaya"
+        // Need dummy entry
+        let dummy = Entry::Dhatu(DhatuEntry {
+            root: "dummy".to_string(),
+            gana: "dummy".to_string(),
+            artha: None,
+            code: None,
+        });
+
+        lex.add("deva".to_string(), dummy.clone());
+        lex.add("Alaya".to_string(), dummy.clone());
+        lex.add("devAlaya".to_string(), dummy.clone()); // full word
+
+        // Add for "devendra"
+        lex.add("indra".to_string(), dummy.clone());
+
+        // Add for "ityAdi"
+        lex.add("iti".to_string(), dummy.clone());
+        lex.add("Adi".to_string(), dummy.clone());
+
+        lex
     }
 
     #[test]
-    fn test_segment_result_has_words() {
-        let results = segment("test");
-        assert!(!results[0].words.is_empty());
+    fn test_segment_simple() {
+        let lex = create_mock_lexicon();
+        let segmenter = Segmenter::new(lex);
+
+        let results = segmenter.segment("devAlaya");
+
+        // Should find ["devAlaya"] (score 1.0) and ["deva", "Alaya"] (score 0.5)
+        assert!(!results.is_empty());
+
+        let has_full = results.iter().any(|r| r.words == vec!["devAlaya"]);
+        let has_split = results.iter().any(|r| r.words == vec!["deva", "Alaya"]);
+
+        assert!(has_full);
+        assert!(has_split);
+    }
+
+    #[test]
+    fn test_segment_sandhi() {
+        let lex = create_mock_lexicon();
+        let segmenter = Segmenter::new(lex);
+
+        // "devendra" -> "deva" + "indra"
+        let results = segmenter.segment("devendra");
+        assert!(results.iter().any(|r| r.words == vec!["deva", "indra"]));
+
+        // "ityAdi" -> "iti" + "Adi"
+        let results = segmenter.segment("ityAdi");
+        assert!(results.iter().any(|r| r.words == vec!["iti", "Adi"]));
     }
 }

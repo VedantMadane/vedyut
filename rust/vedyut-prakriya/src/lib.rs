@@ -8,13 +8,11 @@ pub mod generator;
 pub mod lakara;
 
 pub use dhatu::Dhatu;
-pub use generator::generate_tinanta;
+pub use generator::{generate_tinanta, Purusha, Vacana};
 pub use lakara::Lakara;
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_placeholder() {
         // TODO: Implement prakriya tests
