@@ -61,7 +61,10 @@ pub fn apply_sandhi(left: &str, right: &str) -> String {
 }
 
 fn is_vowel(c: char) -> bool {
-    matches!(c, 'a' | 'A' | 'i' | 'I' | 'u' | 'U' | 'f' | 'F' | 'x' | 'X' | 'e' | 'E' | 'o' | 'O')
+    matches!(
+        c,
+        'a' | 'A' | 'i' | 'I' | 'u' | 'U' | 'f' | 'F' | 'x' | 'X' | 'e' | 'E' | 'o' | 'O'
+    )
 }
 
 fn apply_vowel_sandhi(first: char, second: char) -> String {

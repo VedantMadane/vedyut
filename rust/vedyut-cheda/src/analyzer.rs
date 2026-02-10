@@ -1,7 +1,7 @@
 //! Morphological analysis
 
 use serde::{Deserialize, Serialize};
-use vedyut_kosha::{Lexicon, Entry};
+use vedyut_kosha::{Entry, Lexicon};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnalysisResult {
@@ -51,9 +51,9 @@ impl Analyzer {
                             linga: None,
                             tags: vec!["tinanta".to_string()],
                         });
-                    },
+                    }
                     Entry::Subanta(subanta) => {
-                         results.push(AnalysisResult {
+                        results.push(AnalysisResult {
                             word: word.to_string(),
                             root: Some(subanta.stem.clone()),
                             lakara: None,
@@ -63,7 +63,7 @@ impl Analyzer {
                             linga: subanta.linga.clone(),
                             tags: vec!["subanta".to_string()],
                         });
-                    },
+                    }
                     Entry::Avyaya(avyaya) => {
                         results.push(AnalysisResult {
                             word: word.to_string(),
@@ -75,7 +75,7 @@ impl Analyzer {
                             linga: None,
                             tags: vec!["avyaya".to_string()],
                         });
-                    },
+                    }
                     _ => {} // Handle others
                 }
             }
@@ -88,7 +88,7 @@ impl Analyzer {
 // For backward compatibility or simpler usage without lexicon initialization
 pub fn analyze_placeholder(word: &str) -> Option<AnalysisResult> {
     // Legacy function for testing basic setup without lexicon
-     Some(AnalysisResult {
+    Some(AnalysisResult {
         word: word.to_string(),
         root: None,
         lakara: None,
@@ -103,17 +103,20 @@ pub fn analyze_placeholder(word: &str) -> Option<AnalysisResult> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vedyut_kosha::entries::{TinantaEntry, Entry};
+    use vedyut_kosha::entries::{Entry, TinantaEntry};
 
     #[test]
     fn test_analyze_tinanta() {
         let mut lexicon = Lexicon::new();
-        lexicon.add("भवति".to_string(), Entry::Tinanta(TinantaEntry {
-            root: "भू".to_string(),
-            lakara: "lat".to_string(),
-            purusha: "prathama".to_string(),
-            vacana: "eka".to_string(),
-        }));
+        lexicon.add(
+            "भवति".to_string(),
+            Entry::Tinanta(TinantaEntry {
+                root: "भू".to_string(),
+                lakara: "lat".to_string(),
+                purusha: "prathama".to_string(),
+                vacana: "eka".to_string(),
+            }),
+        );
 
         let analyzer = Analyzer::new(lexicon);
         let results = analyzer.analyze("भवति");

@@ -6,7 +6,7 @@
 pub mod analyzer;
 pub mod segmenter;
 
-pub use analyzer::{Analyzer, AnalysisResult};
+pub use analyzer::{AnalysisResult, Analyzer};
 // pub use segmenter::{segment, SegmentResult}; // Use module?
 use segmenter::{segment, SegmentResult};
 

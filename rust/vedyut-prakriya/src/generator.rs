@@ -1,6 +1,6 @@
+use crate::dhatu::Gana;
 /// Word generation following Pāṇinian grammar
 use crate::{Dhatu, Lakara};
-use crate::dhatu::Gana;
 use vedyut_lipi::{transliterate, Scheme};
 
 /// Generate tiṅanta (verb form) from dhātu
@@ -45,7 +45,7 @@ pub fn generate_tinanta(dhatu: &Dhatu, lakara: Lakara, purusha: Purusha, vacana:
 
 fn apply_final_sandhi(text: &str) -> String {
     if text.ends_with('s') {
-        let mut s = text[..text.len()-1].to_string();
+        let mut s = text[..text.len() - 1].to_string();
         s.push('H');
         s
     } else {
@@ -58,7 +58,7 @@ fn form_lat_stem(root: &str) -> String {
     // Step 1: Guna of root vowel
     // u/U -> o
     let gunated = if root.ends_with('u') || root.ends_with('U') {
-        let mut s = root[..root.len()-1].to_string();
+        let mut s = root[..root.len() - 1].to_string();
         s.push('o');
         s
     } else {
@@ -68,7 +68,7 @@ fn form_lat_stem(root: &str) -> String {
     // Step 2: Add 'sap' (a)
     // o + a -> ava (Ayadi)
     if gunated.ends_with('o') {
-        let mut s = gunated[..gunated.len()-1].to_string();
+        let mut s = gunated[..gunated.len() - 1].to_string();
         s.push_str("ava");
         s
     } else {
@@ -100,7 +100,7 @@ fn combine_stem_ending(stem: &str, ending: &str) -> String {
     // 1. ato dIrgho yaJi (7.3.101): Short 'a' becomes long 'A' before 'yaJ' (y, v, r, l, Y, m, N, R, J)
     // endings starting with 'm' or 'v': mi, vas, mas
     if stem.ends_with('a') && (ending.starts_with('m') || ending.starts_with('v')) {
-        let mut new_stem = stem[..stem.len()-1].to_string();
+        let mut new_stem = stem[..stem.len() - 1].to_string();
         new_stem.push('A');
         return format!("{}{}", new_stem, ending);
     }
@@ -108,7 +108,7 @@ fn combine_stem_ending(stem: &str, ending: &str) -> String {
     // 2. ato guNe (6.1.97): 'a' + guna vowel (a, e, o) -> pararupa (the second one)
     // 'anti' starts with 'a'. 'Bava' + 'anti' -> 'Bav' + 'anti' -> 'Bavanti'
     if stem.ends_with('a') && ending.starts_with('a') {
-        let new_stem = &stem[..stem.len()-1]; // Remove 'a'
+        let new_stem = &stem[..stem.len() - 1]; // Remove 'a'
         return format!("{}{}", new_stem, ending);
     }
 
@@ -149,11 +149,17 @@ mod tests {
         let dhatu = Dhatu::new("भू".to_string(), Gana::Bhvadi);
 
         // 3rd Person (Prathama)
-        assert_eq!(generate_tinanta(&dhatu, Lakara::Lat, Purusha::Prathama, Vacana::Eka), "भवति");
-        assert_eq!(generate_tinanta(&dhatu, Lakara::Lat, Purusha::Prathama, Vacana::Dvi), "भवतः"); // Visarga?
-        // Wait, SLP1 "tas" is "तस्". At end of pada, s -> H (visarga).
-        // My generator returns "Bavatas" -> "भवतस्".
-        // The expectation is usually "भवतः".
-        // I need to implement s -> H conversion at end of word.
+        assert_eq!(
+            generate_tinanta(&dhatu, Lakara::Lat, Purusha::Prathama, Vacana::Eka),
+            "भवति"
+        );
+        assert_eq!(
+            generate_tinanta(&dhatu, Lakara::Lat, Purusha::Prathama, Vacana::Dvi),
+            "भवतः"
+        ); // Visarga?
+           // Wait, SLP1 "tas" is "तस्". At end of pada, s -> H (visarga).
+           // My generator returns "Bavatas" -> "भवतस्".
+           // The expectation is usually "भवतः".
+           // I need to implement s -> H conversion at end of word.
     }
 }

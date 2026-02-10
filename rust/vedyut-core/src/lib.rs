@@ -31,10 +31,7 @@ impl PyScheme {
     #[new]
     fn new(name: &str) -> PyResult<Self> {
         let scheme = Scheme::from_str(name).ok_or_else(|| {
-            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
-                "Unsupported scheme: {}",
-                name
-            ))
+            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported scheme: {}", name))
         })?;
         Ok(Self { inner: scheme })
     }
@@ -85,7 +82,7 @@ fn py_sanskritify(
     preserve_meaning: bool,
     replace_urdu_arabic: bool,
 ) -> PyResult<String> {
-    use vedyut_sanskritify::{RefinementLevel, SanskritifyOptions, sanskritify_text};
+    use vedyut_sanskritify::{sanskritify_text, RefinementLevel, SanskritifyOptions};
 
     let scheme = Scheme::from_str(script).ok_or_else(|| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported script: {}", script))
@@ -136,7 +133,7 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
     })?;
 
     if let Some(analysis) = vedyut_cheda::analyze_word(word) {
-        let dict = PyDict::new_bound(py);
+        let dict = PyDict::new(py);
         dict.set_item("word", analysis.word)?;
         dict.set_item("root", analysis.root)?;
         dict.set_item("lakara", analysis.lakara)?;

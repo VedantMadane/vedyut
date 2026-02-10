@@ -81,17 +81,48 @@ pub fn get_slp1_matra_devanagari(c: char) -> Option<&'static str> {
 }
 
 pub fn is_slp1_vowel(c: char) -> bool {
-    matches!(c, 'a' | 'A' | 'i' | 'I' | 'u' | 'U' | 'f' | 'F' | 'x' | 'X' | 'e' | 'E' | 'o' | 'O')
+    matches!(
+        c,
+        'a' | 'A' | 'i' | 'I' | 'u' | 'U' | 'f' | 'F' | 'x' | 'X' | 'e' | 'E' | 'o' | 'O'
+    )
 }
 
 pub fn is_slp1_consonant(c: char) -> bool {
-    matches!(c, 'k' | 'K' | 'g' | 'G' | 'N' |
-                'c' | 'C' | 'j' | 'J' | 'Y' |
-                'w' | 'W' | 'q' | 'Q' | 'R' |
-                't' | 'T' | 'd' | 'D' | 'n' |
-                'p' | 'P' | 'b' | 'B' | 'm' |
-                'y' | 'r' | 'l' | 'v' |
-                'S' | 'z' | 's' | 'h')
+    matches!(
+        c,
+        'k' | 'K'
+            | 'g'
+            | 'G'
+            | 'N'
+            | 'c'
+            | 'C'
+            | 'j'
+            | 'J'
+            | 'Y'
+            | 'w'
+            | 'W'
+            | 'q'
+            | 'Q'
+            | 'R'
+            | 't'
+            | 'T'
+            | 'd'
+            | 'D'
+            | 'n'
+            | 'p'
+            | 'P'
+            | 'b'
+            | 'B'
+            | 'm'
+            | 'y'
+            | 'r'
+            | 'l'
+            | 'v'
+            | 'S'
+            | 'z'
+            | 's'
+            | 'h'
+    )
 }
 
 // Reverse mapping for IAST to SLP1 (ordered by length descending for greedy match)

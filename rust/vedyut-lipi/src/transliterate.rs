@@ -1,5 +1,5 @@
-use crate::schemes::Scheme;
 use crate::mappings;
+use crate::schemes::Scheme;
 
 /// Transliterate text from one scheme to another
 pub fn transliterate(text: &str, from: Scheme, to: Scheme) -> String {
@@ -43,7 +43,7 @@ fn to_slp1(text: &str, from: Scheme) -> String {
                 }
             }
             result
-        },
+        }
         Scheme::Devanagari => {
             let mut result = String::with_capacity(text.len());
             let mut pending_consonant = None;
@@ -61,27 +61,28 @@ fn to_slp1(text: &str, from: Scheme) -> String {
                         result.push(slp);
                         pending_consonant = None;
                     }
-                } else if c == '्' { // Virama
+                } else if c == '्' {
+                    // Virama
                     if let Some(p) = pending_consonant {
                         result.push(p);
                         pending_consonant = None;
                     }
                 } else if let Some(slp) = mappings::get_devanagari_vowel_to_slp1(c) {
-                     if let Some(p) = pending_consonant {
+                    if let Some(p) = pending_consonant {
                         result.push(p);
                         result.push('a');
                     }
                     result.push(slp);
                     pending_consonant = None;
                 } else if let Some(slp) = mappings::get_devanagari_other_to_slp1(c) {
-                     if let Some(p) = pending_consonant {
+                    if let Some(p) = pending_consonant {
                         result.push(p);
                         result.push('a');
                     }
                     result.push(slp);
                     pending_consonant = None;
                 } else {
-                     if let Some(p) = pending_consonant {
+                    if let Some(p) = pending_consonant {
                         result.push(p);
                         result.push('a');
                         pending_consonant = None;
@@ -94,7 +95,7 @@ fn to_slp1(text: &str, from: Scheme) -> String {
                 result.push('a');
             }
             result
-        },
+        }
         _ => text.to_string(), // TODO: Implement other input schemes
     }
 }
@@ -135,7 +136,7 @@ fn from_slp1(text: &str, to: Scheme) -> String {
                             result.push('्');
                         }
                     } else {
-                         result.push(c);
+                        result.push(c);
                     }
                 } else if mappings::is_slp1_vowel(c) {
                     // Independent vowel
@@ -156,13 +157,13 @@ fn from_slp1(text: &str, to: Scheme) -> String {
                 i += 1;
             }
             result
-        },
+        }
         Scheme::Iast => {
-             // Basic implementation for IAST output
-             // map back using mappings.rs if I added SLP1->IAST, but I didn't yet.
-             // For now, return SLP1 to indicate unimplemented
-             text.to_string()
-        },
+            // Basic implementation for IAST output
+            // map back using mappings.rs if I added SLP1->IAST, but I didn't yet.
+            // For now, return SLP1 to indicate unimplemented
+            text.to_string()
+        }
         _ => text.to_string(), // TODO: Implement other output schemes
     }
 }

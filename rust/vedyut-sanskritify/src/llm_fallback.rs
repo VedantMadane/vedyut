@@ -158,7 +158,7 @@ impl OriginDetector {
         // TODO: Implement actual LLM API calls
         // This is a placeholder for the LLM integration
 
-        let prompt = self.build_prompt(word, options);
+        let _prompt = self.build_prompt(word, options);
 
         match provider {
             LlmProvider::OpenAI { model, api_key: _ } => {
