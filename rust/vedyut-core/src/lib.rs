@@ -133,7 +133,7 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
     })?;
 
     if let Some(analysis) = vedyut_cheda::analyze_word(word) {
-        let dict = PyDict::new_bound(py);
+        let dict = PyDict::new(py);
         dict.set_item("word", analysis.word)?;
         dict.set_item("stem", analysis.stem)?;
         dict.set_item("linga", analysis.linga)?;

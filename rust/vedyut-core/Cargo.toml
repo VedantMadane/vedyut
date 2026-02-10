@@ -23,5 +23,8 @@ pyo3 = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
+[features]
+extension-module = ["pyo3/extension-module"]
+
 [dev-dependencies]
 criterion = { workspace = true }
