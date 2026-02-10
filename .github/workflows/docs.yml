@@ -32,7 +32,7 @@ jobs:
       
       - name: Build Python docs
         run: |
-          uv run pdoc --html python/vedyut --output-dir docs/python
+          uv run pdoc --html python/vedyut --output-dir docs/python --force
       
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

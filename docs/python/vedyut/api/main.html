@@ -306,12 +306,13 @@ async def transliterate(req: TransliterateRequest):
 </summary>
 <pre><code class="python">class AnalysisResult(BaseModel):
     &#34;&#34;&#34;Morphological analysis result&#34;&#34;&#34;
+
     lemma: str
-    case: Optional[str] = None
-    number: Optional[str] = None
-    gender: Optional[str] = None
-    person: Optional[str] = None
-    tense: Optional[str] = None</code></pre>
+    case: str | None = None
+    number: str | None = None
+    gender: str | None = None
+    person: str | None = None
+    tense: str | None = None</code></pre>
 </details>
 <div class="desc"><p>Morphological analysis result</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
@@ -365,6 +366,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class AnalyzeRequest(BaseModel):
     &#34;&#34;&#34;Request model for morphological analysis&#34;&#34;&#34;
+
     word: str = Field(..., description=&#34;Sanskrit word to analyze&#34;)
     scheme: str = Field(&#34;devanagari&#34;, description=&#34;Input script scheme&#34;)</code></pre>
 </details>
@@ -404,8 +406,9 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class AnalyzeResponse(BaseModel):
     &#34;&#34;&#34;Response model for analysis&#34;&#34;&#34;
+
     word: str
-    analyses: List[AnalysisResult]
+    analyses: list[AnalysisResult]
     took_ms: float</code></pre>
 </details>
 <div class="desc"><p>Response model for analysis</p>
@@ -419,7 +422,7 @@ validated to form a valid model.</p>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="vedyut.api.main.AnalyzeResponse.analyses"><code class="name">var <span class="ident">analyses</span> : List[<a title="vedyut.api.main.AnalysisResult" href="#vedyut.api.main.AnalysisResult">AnalysisResult</a>]</code></dt>
+<dt id="vedyut.api.main.AnalyzeResponse.analyses"><code class="name">var <span class="ident">analyses</span> : list[<a title="vedyut.api.main.AnalysisResult" href="#vedyut.api.main.AnalysisResult">AnalysisResult</a>]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -448,6 +451,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class GenerateRequest(BaseModel):
     &#34;&#34;&#34;Request model for word generation&#34;&#34;&#34;
+
     dhatu: str = Field(..., description=&#34;Verb root (dhatu)&#34;)
     lakara: str = Field(..., description=&#34;Tense/mood (lakara)&#34;)
     purusha: str = Field(..., description=&#34;Person (prathama, madhyama, uttama)&#34;)
@@ -497,7 +501,8 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class GenerateResponse(BaseModel):
     &#34;&#34;&#34;Response model for generation&#34;&#34;&#34;
-    forms: List[str]
+
+    forms: list[str]
     dhatu: str
     took_ms: float</code></pre>
 </details>
@@ -516,7 +521,7 @@ validated to form a valid model.</p>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="vedyut.api.main.GenerateResponse.forms"><code class="name">var <span class="ident">forms</span> : List[str]</code></dt>
+<dt id="vedyut.api.main.GenerateResponse.forms"><code class="name">var <span class="ident">forms</span> : list[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -541,6 +546,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class SanskritifyRequest(BaseModel):
     &#34;&#34;&#34;Request model for sanskritification&#34;&#34;&#34;
+
     text: str = Field(..., description=&#34;Text to sanskritify (any Indian language)&#34;)
     script: str = Field(&#34;devanagari&#34;, description=&#34;Script for input/output&#34;)
     level: str = Field(&#34;medium&#34;, description=&#34;Refinement level: light, medium, high, classical&#34;)
@@ -590,6 +596,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class SanskritifyResponse(BaseModel):
     &#34;&#34;&#34;Response model for sanskritification&#34;&#34;&#34;
+
     original: str
     refined: str
     script: str
@@ -644,6 +651,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class SegmentRequest(BaseModel):
     &#34;&#34;&#34;Request model for segmentation&#34;&#34;&#34;
+
     text: str = Field(..., description=&#34;Sanskrit text to segment&#34;)
     max_splits: int = Field(10, description=&#34;Maximum number of segmentation options&#34;)
     scheme: str = Field(&#34;devanagari&#34;, description=&#34;Input script scheme&#34;)</code></pre>
@@ -688,7 +696,8 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class SegmentResponse(BaseModel):
     &#34;&#34;&#34;Response model for segmentation&#34;&#34;&#34;
-    segments: List[List[str]]
+
+    segments: list[list[str]]
     took_ms: float</code></pre>
 </details>
 <div class="desc"><p>Response model for segmentation</p>
@@ -706,7 +715,7 @@ validated to form a valid model.</p>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="vedyut.api.main.SegmentResponse.segments"><code class="name">var <span class="ident">segments</span> : List[List[str]]</code></dt>
+<dt id="vedyut.api.main.SegmentResponse.segments"><code class="name">var <span class="ident">segments</span> : list[list[str]]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -727,6 +736,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class TransliterateRequest(BaseModel):
     &#34;&#34;&#34;Request model for transliteration&#34;&#34;&#34;
+
     text: str = Field(..., description=&#34;Text to transliterate&#34;)
     from_scheme: str = Field(..., description=&#34;Source script (iast, slp1, devanagari, etc.)&#34;)
     to_scheme: str = Field(..., description=&#34;Target script (iast, slp1, devanagari, etc.)&#34;)</code></pre>
@@ -771,6 +781,7 @@ validated to form a valid model.</p>
 </summary>
 <pre><code class="python">class TransliterateResponse(BaseModel):
     &#34;&#34;&#34;Response model for transliteration&#34;&#34;&#34;
+
     result: str
     from_scheme: str
     to_scheme: str

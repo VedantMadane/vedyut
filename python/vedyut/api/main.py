@@ -1,10 +1,10 @@
 """FastAPI application for Vedyut Sanskrit NLP API"""
 
+import time
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import List, Optional
-import time
 
 app = FastAPI(
     title="Vedyut Sanskrit NLP API",
@@ -55,7 +55,7 @@ class SegmentRequest(BaseModel):
 class SegmentResponse(BaseModel):
     """Response model for segmentation"""
 
-    segments: List[List[str]]
+    segments: list[list[str]]
     took_ms: float
 
 
@@ -70,18 +70,18 @@ class AnalysisResult(BaseModel):
     """Morphological analysis result"""
 
     lemma: str
-    case: Optional[str] = None
-    number: Optional[str] = None
-    gender: Optional[str] = None
-    person: Optional[str] = None
-    tense: Optional[str] = None
+    case: str | None = None
+    number: str | None = None
+    gender: str | None = None
+    person: str | None = None
+    tense: str | None = None
 
 
 class AnalyzeResponse(BaseModel):
     """Response model for analysis"""
 
     word: str
-    analyses: List[AnalysisResult]
+    analyses: list[AnalysisResult]
     took_ms: float
 
 
@@ -97,7 +97,7 @@ class GenerateRequest(BaseModel):
 class GenerateResponse(BaseModel):
     """Response model for generation"""
 
-    forms: List[str]
+    forms: list[str]
     dhatu: str
     took_ms: float
 

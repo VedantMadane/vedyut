@@ -91,8 +91,7 @@ impl std::str::FromStr for Scheme {
 
 impl Scheme {
     /// Parse scheme from string (case-insensitive)
-    #[allow(clippy::should_implement_trait)]
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn from_name(s: &str) -> Option<Self> {
         use std::str::FromStr;
         <Self as FromStr>::from_str(s).ok()
     }

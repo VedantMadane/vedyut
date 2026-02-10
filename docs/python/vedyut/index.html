@@ -60,7 +60,7 @@ with Python ease-of-use.</p>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="vedyut.analyze"><code class="name flex">
-<span>def <span class="ident">analyze</span></span>(<span>word: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> List[Dict[str, Any]]</span>
+<span>def <span class="ident">analyze</span></span>(<span>word: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> list[dict[str, typing.Any]]</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -70,7 +70,7 @@ with Python ease-of-use.</p>
 <pre><code class="python">def analyze(
     word: str,
     script: Script = Script.DEVANAGARI,
-) -&gt; List[Dict[str, Any]]:
+) -&gt; list[dict[str, Any]]:
     &#34;&#34;&#34;
     Analyze morphological features of a Sanskrit word.
 
@@ -110,7 +110,7 @@ with Python ease-of-use.</p>
 </code></pre></div>
 </dd>
 <dt id="vedyut.generate_verb"><code class="name flex">
-<span>def <span class="ident">generate_verb</span></span>(<span>dhatu: str,<br>lakara: str,<br>purusha: str,<br>vacana: str,<br>output_script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> List[str]</span>
+<span>def <span class="ident">generate_verb</span></span>(<span>dhatu: str,<br>lakara: str,<br>purusha: str,<br>vacana: str,<br>output_script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI) ‑> list[str]</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -123,7 +123,7 @@ with Python ease-of-use.</p>
     purusha: str,
     vacana: str,
     output_script: Script = Script.DEVANAGARI,
-) -&gt; List[str]:
+) -&gt; list[str]:
     &#34;&#34;&#34;
     Generate Sanskrit verb forms from root + grammatical features.
 
@@ -179,14 +179,14 @@ with Python ease-of-use.</p>
 </code></pre></div>
 </dd>
 <dt id="vedyut.list_scripts"><code class="name flex">
-<span>def <span class="ident">list_scripts</span></span>(<span>) ‑> List[<a title="vedyut.Script" href="#vedyut.Script">Script</a>]</span>
+<span>def <span class="ident">list_scripts</span></span>(<span>) ‑> list[<a title="vedyut.Script" href="#vedyut.Script">Script</a>]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def list_scripts() -&gt; List[Script]:
+<pre><code class="python">def list_scripts() -&gt; list[Script]:
     &#34;&#34;&#34;
     Get all supported scripts.
 
@@ -214,7 +214,7 @@ with Python ease-of-use.</p>
     preserve_meaning: bool = True,
     replace_urdu_arabic: bool = True,
     use_llm_fallback: bool = True,
-    llm_api_key: Optional[str] = None,
+    llm_api_key: str | None = None,
 ) -&gt; str:
     &#34;&#34;&#34;
     Make text in any Indian language more like refined Sanskrit.
@@ -256,13 +256,7 @@ with Python ease-of-use.</p>
         &#39;नमस्कार विश्व&#39;
     &#34;&#34;&#34;
     if RUST_AVAILABLE:
-        return _rust_sanskritify(
-            text,
-            script.value,
-            level,
-            preserve_meaning,
-            replace_urdu_arabic
-        )
+        return _rust_sanskritify(text, script.value, level, preserve_meaning, replace_urdu_arabic)
 
     # Fallback if Rust not available
     return f&#34;[Sanskritify &#39;{text}&#39; in {script.value} at {level} level]&#34;</code></pre>
@@ -311,7 +305,7 @@ Uses LLM fallback for words not in vocabulary database.</p>
 </code></pre></div>
 </dd>
 <dt id="vedyut.segment"><code class="name flex">
-<span>def <span class="ident">segment</span></span>(<span>text: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI,<br>max_results: int = 10) ‑> List[List[str]]</span>
+<span>def <span class="ident">segment</span></span>(<span>text: str,<br>script: <a title="vedyut.Script" href="#vedyut.Script">Script</a> = Script.DEVANAGARI,<br>max_results: int = 10) ‑> list[list[str]]</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -322,7 +316,7 @@ Uses LLM fallback for words not in vocabulary database.</p>
     text: str,
     script: Script = Script.DEVANAGARI,
     max_results: int = 10,
-) -&gt; List[List[str]]:
+) -&gt; list[list[str]]:
     &#34;&#34;&#34;
     Segment Sanskrit text into words.
 
@@ -456,6 +450,7 @@ Uses LLM fallback for words not in vocabulary database.</p>
     Every function that deals with script-specific text takes Script as
     an explicit, required parameter.
     &#34;&#34;&#34;
+
     # Romanization schemes
     IAST = &#34;iast&#34;
     SLP1 = &#34;slp1&#34;

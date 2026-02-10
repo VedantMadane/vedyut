@@ -53,7 +53,7 @@ el.replaceWith(d);
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def quick_complete(prompt: str, model: Optional[str] = None) -&gt; str:
+<pre><code class="python">def quick_complete(prompt: str, model: str | None = None) -&gt; str:
     &#34;&#34;&#34;Quick one-off completion (not for production)
 
     Args:
@@ -110,11 +110,11 @@ el.replaceWith(d);
 
     def __init__(
         self,
-        model: Optional[str] = None,
-        embedding_model: Optional[str] = None,
+        model: str | None = None,
+        embedding_model: str | None = None,
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
-        api_key: Optional[str] = None,
+        max_tokens: int | None = None,
+        api_key: str | None = None,
     ):
         &#34;&#34;&#34;Initialize LLM client
 
@@ -136,11 +136,7 @@ el.replaceWith(d);
         if api_key:
             litellm.api_key = api_key
 
-    def complete(
-        self,
-        messages: List[Dict[str, str]],
-        **kwargs
-    ) -&gt; str:
+    def complete(self, messages: list[dict[str, str]], **kwargs) -&gt; str:
         &#34;&#34;&#34;Complete a chat conversation
 
         Args:
@@ -155,15 +151,11 @@ el.replaceWith(d);
             messages=messages,
             temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
             max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-            **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;]}
+            **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;]},
         )
         return response.choices[0].message.content
 
-    def complete_with_json(
-        self,
-        messages: List[Dict[str, str]],
-        **kwargs
-    ) -&gt; Dict[str, Any]:
+    def complete_with_json(self, messages: list[dict[str, str]], **kwargs) -&gt; dict[str, Any]:
         &#34;&#34;&#34;Complete with structured JSON response
 
         Args:
@@ -179,15 +171,19 @@ el.replaceWith(d);
             response_format={&#34;type&#34;: &#34;json_object&#34;},
             temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
             max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-            **{k: v for k, v in kwargs.items()
-               if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;response_format&#34;]}
+            **{
+                k: v
+                for k, v in kwargs.items()
+                if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;response_format&#34;]
+            },
         )
 
         import json
+
         content = response.choices[0].message.content
         return json.loads(content)
 
-    def embed(self, texts: List[str]) -&gt; List[List[float]]:
+    def embed(self, texts: list[str]) -&gt; list[list[float]]:
         &#34;&#34;&#34;Generate embeddings for texts
 
         Args:
@@ -199,13 +195,10 @@ el.replaceWith(d);
         if isinstance(texts, str):
             texts = [texts]
 
-        response = embedding(
-            model=self.embedding_model,
-            input=texts
-        )
+        response = embedding(model=self.embedding_model, input=texts)
         return [item[&#34;embedding&#34;] for item in response.data]
 
-    def embed_single(self, text: str) -&gt; List[float]:
+    def embed_single(self, text: str) -&gt; list[float]:
         &#34;&#34;&#34;Generate embedding for a single text
 
         Args:
@@ -216,11 +209,7 @@ el.replaceWith(d);
         &#34;&#34;&#34;
         return self.embed([text])[0]
 
-    def stream(
-        self,
-        messages: List[Dict[str, str]],
-        **kwargs
-    ):
+    def stream(self, messages: list[dict[str, str]], **kwargs):
         &#34;&#34;&#34;Stream completion response (for long responses)
 
         Args:
@@ -236,8 +225,7 @@ el.replaceWith(d);
             stream=True,
             temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
             max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-            **{k: v for k, v in kwargs.items()
-               if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;stream&#34;]}
+            **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;stream&#34;]},
         )
 
         for chunk in response:
@@ -281,18 +269,14 @@ el.replaceWith(d);
 <h3>Methods</h3>
 <dl>
 <dt id="vedyut.llm.client.LLMClient.complete"><code class="name flex">
-<span>def <span class="ident">complete</span></span>(<span>self, messages: List[Dict[str, str]], **kwargs) ‑> str</span>
+<span>def <span class="ident">complete</span></span>(<span>self, messages: list[dict[str, str]], **kwargs) ‑> str</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def complete(
-    self,
-    messages: List[Dict[str, str]],
-    **kwargs
-) -&gt; str:
+<pre><code class="python">def complete(self, messages: list[dict[str, str]], **kwargs) -&gt; str:
     &#34;&#34;&#34;Complete a chat conversation
 
     Args:
@@ -307,7 +291,7 @@ el.replaceWith(d);
         messages=messages,
         temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
         max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-        **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;]}
+        **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;]},
     )
     return response.choices[0].message.content</code></pre>
 </details>
@@ -323,18 +307,14 @@ el.replaceWith(d);
 <p>Response text</p></div>
 </dd>
 <dt id="vedyut.llm.client.LLMClient.complete_with_json"><code class="name flex">
-<span>def <span class="ident">complete_with_json</span></span>(<span>self, messages: List[Dict[str, str]], **kwargs) ‑> Dict[str, Any]</span>
+<span>def <span class="ident">complete_with_json</span></span>(<span>self, messages: list[dict[str, str]], **kwargs) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def complete_with_json(
-    self,
-    messages: List[Dict[str, str]],
-    **kwargs
-) -&gt; Dict[str, Any]:
+<pre><code class="python">def complete_with_json(self, messages: list[dict[str, str]], **kwargs) -&gt; dict[str, Any]:
     &#34;&#34;&#34;Complete with structured JSON response
 
     Args:
@@ -350,11 +330,15 @@ el.replaceWith(d);
         response_format={&#34;type&#34;: &#34;json_object&#34;},
         temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
         max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-        **{k: v for k, v in kwargs.items()
-           if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;response_format&#34;]}
+        **{
+            k: v
+            for k, v in kwargs.items()
+            if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;response_format&#34;]
+        },
     )
 
     import json
+
     content = response.choices[0].message.content
     return json.loads(content)</code></pre>
 </details>
@@ -370,14 +354,14 @@ el.replaceWith(d);
 <p>Parsed JSON response as dict</p></div>
 </dd>
 <dt id="vedyut.llm.client.LLMClient.embed"><code class="name flex">
-<span>def <span class="ident">embed</span></span>(<span>self, texts: List[str]) ‑> List[List[float]]</span>
+<span>def <span class="ident">embed</span></span>(<span>self, texts: list[str]) ‑> list[list[float]]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def embed(self, texts: List[str]) -&gt; List[List[float]]:
+<pre><code class="python">def embed(self, texts: list[str]) -&gt; list[list[float]]:
     &#34;&#34;&#34;Generate embeddings for texts
 
     Args:
@@ -389,10 +373,7 @@ el.replaceWith(d);
     if isinstance(texts, str):
         texts = [texts]
 
-    response = embedding(
-        model=self.embedding_model,
-        input=texts
-    )
+    response = embedding(model=self.embedding_model, input=texts)
     return [item[&#34;embedding&#34;] for item in response.data]</code></pre>
 </details>
 <div class="desc"><p>Generate embeddings for texts</p>
@@ -405,14 +386,14 @@ el.replaceWith(d);
 <p>List of embedding vectors</p></div>
 </dd>
 <dt id="vedyut.llm.client.LLMClient.embed_single"><code class="name flex">
-<span>def <span class="ident">embed_single</span></span>(<span>self, text: str) ‑> List[float]</span>
+<span>def <span class="ident">embed_single</span></span>(<span>self, text: str) ‑> list[float]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def embed_single(self, text: str) -&gt; List[float]:
+<pre><code class="python">def embed_single(self, text: str) -&gt; list[float]:
     &#34;&#34;&#34;Generate embedding for a single text
 
     Args:
@@ -433,18 +414,14 @@ el.replaceWith(d);
 <p>Embedding vector</p></div>
 </dd>
 <dt id="vedyut.llm.client.LLMClient.stream"><code class="name flex">
-<span>def <span class="ident">stream</span></span>(<span>self, messages: List[Dict[str, str]], **kwargs)</span>
+<span>def <span class="ident">stream</span></span>(<span>self, messages: list[dict[str, str]], **kwargs)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def stream(
-    self,
-    messages: List[Dict[str, str]],
-    **kwargs
-):
+<pre><code class="python">def stream(self, messages: list[dict[str, str]], **kwargs):
     &#34;&#34;&#34;Stream completion response (for long responses)
 
     Args:
@@ -460,8 +437,7 @@ el.replaceWith(d);
         stream=True,
         temperature=kwargs.get(&#34;temperature&#34;, self.temperature),
         max_tokens=kwargs.get(&#34;max_tokens&#34;, self.max_tokens),
-        **{k: v for k, v in kwargs.items()
-           if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;stream&#34;]}
+        **{k: v for k, v in kwargs.items() if k not in [&#34;temperature&#34;, &#34;max_tokens&#34;, &#34;stream&#34;]},
     )
 
     for chunk in response:

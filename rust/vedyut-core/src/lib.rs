@@ -30,7 +30,8 @@ struct PyScheme {
 impl PyScheme {
     #[new]
     fn new(name: &str) -> PyResult<Self> {
-        let scheme = Scheme::from_str(name).ok_or_else(|| {
+        use std::str::FromStr;
+        let scheme = Scheme::from_str(name).map_err(|_| {
             PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported scheme: {}", name))
         })?;
         Ok(Self { inner: scheme })
@@ -54,14 +55,15 @@ impl PyScheme {
 #[pyfunction]
 #[pyo3(signature = (text, from_scheme, to_scheme))]
 fn py_transliterate(text: &str, from_scheme: &str, to_scheme: &str) -> PyResult<String> {
-    let from = Scheme::from_str(from_scheme).ok_or_else(|| {
+    use std::str::FromStr;
+    let from = Scheme::from_str(from_scheme).map_err(|_| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
             "Unsupported source scheme: {}",
             from_scheme
         ))
     })?;
 
-    let to = Scheme::from_str(to_scheme).ok_or_else(|| {
+    let to = Scheme::from_str(to_scheme).map_err(|_| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
             "Unsupported target scheme: {}",
             to_scheme
@@ -82,9 +84,10 @@ fn py_sanskritify(
     preserve_meaning: bool,
     replace_urdu_arabic: bool,
 ) -> PyResult<String> {
+    use std::str::FromStr;
     use vedyut_sanskritify::{sanskritify_text, RefinementLevel, SanskritifyOptions};
 
-    let scheme = Scheme::from_str(script).ok_or_else(|| {
+    let scheme = Scheme::from_str(script).map_err(|_| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported script: {}", script))
     })?;
 
@@ -111,7 +114,8 @@ fn py_sanskritify(
 #[pyfunction]
 #[pyo3(signature = (text, script="devanagari", max_results=10))]
 fn py_segment(text: &str, script: &str, max_results: usize) -> PyResult<Vec<Vec<String>>> {
-    let _scheme = Scheme::from_str(script).ok_or_else(|| {
+    use std::str::FromStr;
+    let _scheme = Scheme::from_str(script).map_err(|_| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported script: {}", script))
     })?;
 
@@ -128,7 +132,8 @@ fn py_segment(text: &str, script: &str, max_results: usize) -> PyResult<Vec<Vec<
 #[pyfunction]
 #[pyo3(signature = (word, script="devanagari"))]
 fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
-    let _scheme = Scheme::from_str(script).ok_or_else(|| {
+    use std::str::FromStr;
+    let _scheme = Scheme::from_str(script).map_err(|_| {
         PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Unsupported script: {}", script))
     })?;
 
