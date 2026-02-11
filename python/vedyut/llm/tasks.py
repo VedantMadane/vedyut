@@ -12,16 +12,16 @@ def disambiguate_segmentation(
     rag: Optional[GrammarRAG] = None,
 ) -> int:
     """Use LLM to choose best segmentation from candidates
-    
+
     Args:
         text: Original Sanskrit text
         candidates: List of possible segmentations (each a list of words)
         llm: LLM client (created if None)
         rag: Grammar RAG (optional, for rule-based context)
-    
+
     Returns:
         Index of best candidate (0-indexed)
-    
+
     Example:
         >>> text = "धर्मक्षेत्रे"
         >>> candidates = [
@@ -33,20 +33,18 @@ def disambiguate_segmentation(
     """
     if llm is None:
         llm = LLMClient()
-    
+
     # Build context from sandhi rules if RAG available
     context = ""
     if rag:
         results = rag.query(f"sandhi rules for: {text}", top_k=2, topic="sandhi")
         if results:
-            context = "\n\nRelevant sandhi rules:\n" + "\n".join([
-                f"- {chunk.text[:200]}..." for chunk, _ in results
-            ])
-    
-    candidates_text = "\n".join([
-        f"{i+1}. {' + '.join(seg)}" for i, seg in enumerate(candidates)
-    ])
-    
+            context = "\n\nRelevant sandhi rules:\n" + "\n".join(
+                [f"- {chunk.text[:200]}..." for chunk, _ in results]
+            )
+
+    candidates_text = "\n".join([f"{i + 1}. {' + '.join(seg)}" for i, seg in enumerate(candidates)])
+
     prompt = f"""You are a Sanskrit grammar expert. Given a Sanskrit text and multiple possible segmentations, choose the most grammatically correct and semantically meaningful one.
 
 Text: {text}
@@ -57,13 +55,9 @@ Possible segmentations:
 
 Respond with ONLY the number (1-{len(candidates)}) of the best segmentation.
 Number: """
-    
-    response = llm.complete(
-        [{"role": "user", "content": prompt}],
-        temperature=0.3,
-        max_tokens=10
-    )
-    
+
+    response = llm.complete([{"role": "user", "content": prompt}], temperature=0.3, max_tokens=10)
+
     try:
         number = int(response.strip().split()[0])
         return max(0, min(number - 1, len(candidates) - 1))
@@ -78,19 +72,19 @@ def translate_sanskrit(
     with_explanation: bool = False,
 ) -> str:
     """Translate Sanskrit text to target language
-    
+
     Args:
         text: Sanskrit text (Devanagari or transliterated)
         target_lang: Target language (default: "english")
         llm: LLM client
         with_explanation: Include word-by-word breakdown
-    
+
     Returns:
         Translation (and optional explanation)
     """
     if llm is None:
         llm = LLMClient()
-    
+
     if with_explanation:
         prompt = f"""Translate this Sanskrit text to {target_lang} with word-by-word explanation:
 
@@ -109,7 +103,7 @@ Translation: [full translation]
 """
     else:
         prompt = f"Translate this Sanskrit text to {target_lang}: {text}"
-    
+
     return llm.complete([{"role": "user", "content": prompt}], temperature=0.5)
 
 
@@ -120,23 +114,23 @@ def explain_grammar(
     rag: Optional[GrammarRAG] = None,
 ) -> str:
     """Generate natural language explanation of grammatical analysis
-    
+
     Args:
         word: Sanskrit word
         analysis: Grammatical analysis dict (lemma, case, number, etc.)
         llm: LLM client
         rag: Grammar RAG for rule references
-    
+
     Returns:
         Beginner-friendly explanation
     """
     if llm is None:
         llm = LLMClient()
-    
+
     analysis_text = ""
     if analysis:
         analysis_text = "\n".join([f"- {k}: {v}" for k, v in analysis.items()])
-    
+
     # Get relevant grammar rules if RAG available
     context = ""
     if rag and analysis:
@@ -145,13 +139,13 @@ def explain_grammar(
             query += f"case {analysis['case']}"
         if "tense" in analysis:
             query += f"tense {analysis['tense']}"
-        
+
         results = rag.query(query, top_k=2)
         if results:
-            context = "\n\nGrammar rules:\n" + "\n".join([
-                f"[{chunk.source}] {chunk.text[:150]}..." for chunk, _ in results
-            ])
-    
+            context = "\n\nGrammar rules:\n" + "\n".join(
+                [f"[{chunk.source}] {chunk.text[:150]}..." for chunk, _ in results]
+            )
+
     prompt = f"""Explain the grammar of this Sanskrit word in simple, beginner-friendly terms:
 
 Word: {word}
@@ -168,7 +162,7 @@ Provide a clear explanation suitable for someone learning Sanskrit. Include:
 
 EXPLANATION:
 """
-    
+
     return llm.complete([{"role": "user", "content": prompt}], temperature=0.6)
 
 
@@ -179,35 +173,34 @@ def suggest_implementation(
     include_tests: bool = True,
 ) -> str:
     """Generate code implementation suggestion from grammar rule
-    
+
     ⚠️ WARNING: LLM-generated code requires human review!
     Use this as a starting point, not production code.
-    
+
     Args:
         rule_description: Description of what to implement
         rag: Grammar RAG (required for rule lookup)
         language: Target programming language
         include_tests: Generate test cases
-    
+
     Returns:
         Generated code with comments
     """
     # Retrieve relevant grammar chunks
     results = rag.query(rule_description, top_k=3)
     context_chunks = [chunk for chunk, _ in results]
-    
+
     if not context_chunks:
         return f"# No relevant grammar rules found for: {rule_description}"
-    
-    context_text = "\n\n".join([
-        f"[{chunk.source} {chunk.sutra_number or ''}]\n{chunk.text}"
-        for chunk in context_chunks
-    ])
-    
+
+    context_text = "\n\n".join(
+        [f"[{chunk.source} {chunk.sutra_number or ''}]\n{chunk.text}" for chunk in context_chunks]
+    )
+
     test_instruction = ""
     if include_tests:
         test_instruction = "\n4. Test cases with examples"
-    
+
     prompt = f"""You are a Sanskrit NLP expert implementing Pāṇinian grammar rules in code.
 
 Grammar References:
@@ -227,13 +220,9 @@ Generate clean, production-ready {language} code with:
 
 {language.upper()} CODE:
 """
-    
+
     llm = rag.llm
-    return llm.complete(
-        [{"role": "user", "content": prompt}],
-        temperature=0.3,
-        max_tokens=2000
-    )
+    return llm.complete([{"role": "user", "content": prompt}], temperature=0.3, max_tokens=2000)
 
 
 def generate_test_cases(
@@ -243,28 +232,28 @@ def generate_test_cases(
     num_cases: int = 10,
 ) -> List[Dict[str, str]]:
     """Generate test cases for a Sanskrit NLP function
-    
+
     Args:
         function_description: What the function does
         rag: Grammar RAG for rule-based examples
         llm: LLM client
         num_cases: Number of test cases to generate
-    
+
     Returns:
         List of {"input": "...", "expected": "...", "description": "..."} dicts
     """
     if llm is None:
         llm = LLMClient()
-    
+
     # Get grammar context if available
     context = ""
     if rag:
         results = rag.query(function_description, top_k=2)
         if results:
-            context = "\n\nGrammar references:\n" + "\n".join([
-                f"{chunk.text[:200]}..." for chunk, _ in results
-            ])
-    
+            context = "\n\nGrammar references:\n" + "\n".join(
+                [f"{chunk.text[:200]}..." for chunk, _ in results]
+            )
+
     prompt = f"""Generate {num_cases} diverse test cases for this Sanskrit NLP function:
 
 Function: {function_description}
@@ -287,7 +276,7 @@ Return as JSON array:
 
 JSON:
 """
-    
+
     try:
         result = llm.complete_with_json([{"role": "user", "content": prompt}])
         if isinstance(result, dict) and "test_cases" in result:
@@ -308,16 +297,16 @@ def validate_rule_implementation(
     language: str = "rust",
 ) -> Dict[str, any]:
     """Validate that code correctly implements a grammar rule
-    
+
     ⚠️ WARNING: This is a heuristic check, not formal verification!
     Always test with actual Sanskrit data.
-    
+
     Args:
         code: Code to validate
         rule_description: What it should implement
         rag: Grammar RAG for rule lookup
         language: Programming language
-    
+
     Returns:
         {
             "is_valid": bool,
@@ -329,7 +318,7 @@ def validate_rule_implementation(
     # Retrieve grammar rules
     results = rag.query(rule_description, top_k=2)
     context_text = "\n\n".join([chunk.text for chunk, _ in results])
-    
+
     prompt = f"""Review this {language} code implementing a Pāṇinian grammar rule.
 
 Grammar Rule:
@@ -352,7 +341,7 @@ Analyze if the code correctly implements the grammar rule. Return JSON:
 
 JSON:
 """
-    
+
     try:
         return rag.llm.complete_with_json([{"role": "user", "content": prompt}])
     except Exception as e:
@@ -360,5 +349,5 @@ JSON:
             "is_valid": False,
             "confidence": 0.0,
             "issues": [f"Validation failed: {e}"],
-            "suggestions": []
+            "suggestions": [],
         }

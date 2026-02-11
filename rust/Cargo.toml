@@ -18,7 +18,11 @@ repository = "https://github.com/VedantMadane/vedyut"
 
 [workspace.dependencies]
 # PyO3 for Python bindings
+<<<<<<< HEAD
 pyo3 = { version = "0.24.1" }
+=======
+pyo3 = { version = "0.24.1", features = ["extension-module"] }
+>>>>>>> origin/main
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }

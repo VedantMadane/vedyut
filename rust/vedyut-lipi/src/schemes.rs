@@ -53,39 +53,55 @@ pub enum Scheme {
     Grantha,
 }
 
+<<<<<<< HEAD
 impl Scheme {
     /// Parse scheme from string (case-insensitive)
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Option<Self> {
+=======
+impl std::str::FromStr for Scheme {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+>>>>>>> origin/main
         match s.to_lowercase().as_str() {
             // Romanization
-            "iast" => Some(Self::Iast),
-            "slp1" => Some(Self::Slp1),
-            "hk" | "harvard-kyoto" => Some(Self::HarvardKyoto),
-            "itrans" => Some(Self::Itrans),
-            "iso" | "iso15919" => Some(Self::Iso15919),
-            "velthuis" => Some(Self::Velthuis),
-            "wx" => Some(Self::Wx),
+            "iast" => Ok(Self::Iast),
+            "slp1" => Ok(Self::Slp1),
+            "hk" | "harvard-kyoto" => Ok(Self::HarvardKyoto),
+            "itrans" => Ok(Self::Itrans),
+            "iso" | "iso15919" => Ok(Self::Iso15919),
+            "velthuis" => Ok(Self::Velthuis),
+            "wx" => Ok(Self::Wx),
 
             // Brahmic scripts
-            "devanagari" | "deva" => Some(Self::Devanagari),
-            "telugu" => Some(Self::Telugu),
-            "tamil" => Some(Self::Tamil),
-            "kannada" => Some(Self::Kannada),
-            "malayalam" => Some(Self::Malayalam),
-            "bengali" | "bangla" => Some(Self::Bengali),
-            "gujarati" => Some(Self::Gujarati),
-            "gurmukhi" | "punjabi" => Some(Self::Gurmukhi),
-            "odia" | "oriya" => Some(Self::Odia),
-            "assamese" => Some(Self::Assamese),
-            "tibetan" => Some(Self::Tibetan),
-            "sinhala" | "sinhalese" => Some(Self::Sinhala),
-            "burmese" => Some(Self::Burmese),
-            "thai" => Some(Self::Thai),
-            "grantha" => Some(Self::Grantha),
+            "devanagari" | "deva" => Ok(Self::Devanagari),
+            "telugu" => Ok(Self::Telugu),
+            "tamil" => Ok(Self::Tamil),
+            "kannada" => Ok(Self::Kannada),
+            "malayalam" => Ok(Self::Malayalam),
+            "bengali" | "bangla" => Ok(Self::Bengali),
+            "gujarati" => Ok(Self::Gujarati),
+            "gurmukhi" | "punjabi" => Ok(Self::Gurmukhi),
+            "odia" | "oriya" => Ok(Self::Odia),
+            "assamese" => Ok(Self::Assamese),
+            "tibetan" => Ok(Self::Tibetan),
+            "sinhala" | "sinhalese" => Ok(Self::Sinhala),
+            "burmese" => Ok(Self::Burmese),
+            "thai" => Ok(Self::Thai),
+            "grantha" => Ok(Self::Grantha),
 
-            _ => None,
+            _ => Err(()),
         }
+    }
+}
+
+impl Scheme {
+    /// Parse scheme from string (case-insensitive)
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(s: &str) -> Option<Self> {
+        use std::str::FromStr;
+        <Self as FromStr>::from_str(s).ok()
     }
 
     /// Get all supported schemes

@@ -6,7 +6,7 @@
 pub mod entries;
 pub mod lexicon;
 
-pub use entries::{DhatuEntry, Entry, SubantaEntry};
+pub use entries::{AvyayaEntry, DhatuEntry, Entry, KrdantaEntry, SubantaEntry, TinantaEntry};
 pub use lexicon::Lexicon;
 
 #[cfg(test)]

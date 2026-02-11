@@ -9,12 +9,20 @@ pub fn split_sandhi(text: &str) -> Vec<(String, String)> {
     let n = text.len();
     let chars: Vec<char> = text.chars().collect();
 
+<<<<<<< HEAD
     for i in 1..n {
         // 1. Simple split (concatenation)
         // Assume no modification at junction
         let left = chars[..i].iter().collect::<String>();
         let right = chars[i..].iter().collect::<String>();
         results.push((left.clone(), right.clone()));
+=======
+    // Iterate over char boundaries, skipping first and last (trivial splits)
+    for (i, _) in text.char_indices().skip(1) {
+        let left = &text[..i];
+        let right = &text[i..];
+        results.push((left.to_string(), right.to_string()));
+>>>>>>> origin/main
     }
 
     for j in 0..n {

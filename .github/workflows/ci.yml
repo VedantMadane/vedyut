@@ -122,14 +122,11 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
       
-      - name: Build Rust workspace (PyO3 needs Python)
-        run: cargo build --release
-        working-directory: ./rust
-        env:
-          PYO3_PYTHON: python3.12
+      - name: Build with Maturin
+        run: uvx maturin build --release
       
       - name: Check Python package
-        run: uv sync
+        run: uv sync --all-extras
 
   security:
     name: Security Audit
