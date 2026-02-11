@@ -148,7 +148,6 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
         Ok(vec![])
     }
 }
-<<<<<<< HEAD
 
 #[cfg(test)]
 mod tests {
@@ -164,5 +163,3 @@ mod tests {
         });
     }
 }
-=======
->>>>>>> origin/main

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 use rustc_hash::FxHashMap;
 
 pub struct SchemeData {
@@ -177,8 +176,7 @@ pub fn get_hk_to_slp1() -> Vec<(&'static str, &'static str)> {
     ];
     map.sort_by(|a, b| b.0.len().cmp(&a.0.len()));
     map
-=======
-// ... (existing code)
+}
 
 pub fn get_slp1_to_devanagari(c: char) -> Option<&'static str> {
     match c {
@@ -206,31 +204,31 @@ pub fn get_slp1_to_devanagari(c: char) -> Option<&'static str> {
         'c' => Some("च"),
         'C' => Some("छ"),
         'j' => Some("ज"),
-        'J' => Some("झ"),
-        'Y' => Some("ञ"),
-        'w' => Some("ट"),
-        'W' => Some("ठ"),
-        'q' => Some("ड"),
-        'Q' => Some("ढ"),
-        'R' => Some("ण"),
-        't' => Some("त"),
-        'T' => Some("थ"),
-        'd' => Some("द"),
-        'D' => Some("ध"),
-        'n' => Some("न"),
-        'p' => Some("प"),
-        'P' => Some("फ"),
-        'b' => Some("ब"),
-        'B' => Some("भ"),
-        'm' => Some("म"),
-        'y' => Some("य"),
-        'r' => Some("र"),
-        'l' => Some("ल"),
-        'v' => Some("व"),
-        'S' => Some("श"),
-        'z' => Some("ष"),
-        's' => Some("स"),
-        'h' => Some("ह"),
+        'झ' => Some("झ"),
+        'ञ' => Some("ञ"),
+        'ट' => Some("ट"),
+        'ठ' => Some("ठ"),
+        'ड' => Some("ड"),
+        'ढ' => Some("ढ"),
+        'ण' => Some("ण"),
+        'त' => Some("त"),
+        'थ' => Some("थ"),
+        'द' => Some("द"),
+        'ध' => Some("ध"),
+        'न' => Some("न"),
+        'प' => Some("प"),
+        'फ' => Some("फ"),
+        'ब' => Some("ब"),
+        'भ' => Some("भ"),
+        'म' => Some("म"),
+        'य' => Some("य"),
+        'र' => Some("र"),
+        'ल' => Some("ल"),
+        'व' => Some("व"),
+        'श' => Some("श"),
+        'ष' => Some("ष"),
+        'स' => Some("स"),
+        'ह' => Some("ह"),
         // Others
         'M' => Some("ं"),
         'H' => Some("ः"),
@@ -449,5 +447,4 @@ pub fn get_devanagari_other_to_slp1(c: char) -> Option<char> {
         'ऽ' => Some('\''),
         _ => None,
     }
->>>>>>> origin/main
 }
