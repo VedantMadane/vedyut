@@ -1,15 +1,14 @@
 """Sanskrit-specific LLM tasks using RAG"""
 
-from typing import List, Dict, Optional
 from .client import LLMClient
-from .rag import GrammarRAG, GrammarChunk
+from .rag import GrammarRAG
 
 
 def disambiguate_segmentation(
     text: str,
-    candidates: List[List[str]],
-    llm: Optional[LLMClient] = None,
-    rag: Optional[GrammarRAG] = None,
+    candidates: list[list[str]],
+    llm: LLMClient | None = None,
+    rag: GrammarRAG | None = None,
 ) -> int:
     """Use LLM to choose best segmentation from candidates
 
@@ -68,7 +67,7 @@ Number: """
 def translate_sanskrit(
     text: str,
     target_lang: str = "english",
-    llm: Optional[LLMClient] = None,
+    llm: LLMClient | None = None,
     with_explanation: bool = False,
 ) -> str:
     """Translate Sanskrit text to target language
@@ -109,9 +108,9 @@ Translation: [full translation]
 
 def explain_grammar(
     word: str,
-    analysis: Optional[Dict] = None,
-    llm: Optional[LLMClient] = None,
-    rag: Optional[GrammarRAG] = None,
+    analysis: dict | None = None,
+    llm: LLMClient | None = None,
+    rag: GrammarRAG | None = None,
 ) -> str:
     """Generate natural language explanation of grammatical analysis
 
@@ -227,10 +226,10 @@ Generate clean, production-ready {language} code with:
 
 def generate_test_cases(
     function_description: str,
-    rag: Optional[GrammarRAG] = None,
-    llm: Optional[LLMClient] = None,
+    rag: GrammarRAG | None = None,
+    llm: LLMClient | None = None,
     num_cases: int = 10,
-) -> List[Dict[str, str]]:
+) -> list[dict[str, str]]:
     """Generate test cases for a Sanskrit NLP function
 
     Args:
@@ -295,7 +294,7 @@ def validate_rule_implementation(
     rule_description: str,
     rag: GrammarRAG,
     language: str = "rust",
-) -> Dict[str, any]:
+) -> dict[str, any]:
     """Validate that code correctly implements a grammar rule
 
     ⚠️ WARNING: This is a heuristic check, not formal verification!

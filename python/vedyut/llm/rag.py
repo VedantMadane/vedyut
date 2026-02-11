@@ -13,12 +13,11 @@ The LLM can then:
 4. Cross-reference multiple sources
 """
 
-import os
 import json
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+
 import numpy as np
-from dataclasses import dataclass, asdict
 
 from .client import LLMClient
 
@@ -30,10 +29,10 @@ class GrammarChunk:
     id: str
     text: str  # The actual content (sūtra + commentary)
     source: str  # "ashtadhyayi", "kashika", "kale", etc.
-    sutra_number: Optional[str] = None  # e.g., "1.1.1", "3.2.123"
-    topic: Optional[str] = None  # e.g., "sandhi", "lakara", "dhatu"
+    sutra_number: str | None = None  # e.g., "1.1.1", "3.2.123"
+    topic: str | None = None  # e.g., "sandhi", "lakara", "dhatu"
     language: str = "sanskrit"  # "sanskrit" or "english"
-    embedding: Optional[List[float]] = None
+    embedding: list[float] | None = None
 
 
 class GrammarRAG:
@@ -54,7 +53,7 @@ class GrammarRAG:
     def __init__(
         self,
         data_dir: str = "data/grammar",
-        llm_client: Optional[LLMClient] = None,
+        llm_client: LLMClient | None = None,
         index_file: str = "grammar_index.json",
     ):
         """Initialize RAG system
@@ -68,8 +67,8 @@ class GrammarRAG:
         self.llm = llm_client or LLMClient()
         self.index_file = self.data_dir / index_file
 
-        self.chunks: List[GrammarChunk] = []
-        self.chunk_embeddings: Optional[np.ndarray] = None
+        self.chunks: list[GrammarChunk] = []
+        self.chunk_embeddings: np.ndarray | None = None
 
     def load_texts(self):
         """Load grammar treatises from data directory
@@ -162,14 +161,14 @@ class GrammarRAG:
                 )
                 self.chunks.append(chunk)
 
-    def _extract_sutra_number(self, text: str) -> Optional[str]:
+    def _extract_sutra_number(self, text: str) -> str | None:
         """Extract sūtra number from text (e.g., '1.1.1', '3.2.123')"""
         import re
 
         match = re.search(r"\b(\d+\.\d+\.\d+)\b", text[:100])
         return match.group(1) if match else None
 
-    def _infer_topic(self, text: str) -> Optional[str]:
+    def _infer_topic(self, text: str) -> str | None:
         """Infer grammatical topic from text content"""
         text_lower = text.lower()
         if any(word in text_lower for word in ["sandhi", "सन्धि"]):
@@ -244,9 +243,9 @@ class GrammarRAG:
         self,
         query_text: str,
         top_k: int = 5,
-        topic: Optional[str] = None,
-        language: Optional[str] = None,
-    ) -> List[Tuple[GrammarChunk, float]]:
+        topic: str | None = None,
+        language: str | None = None,
+    ) -> list[tuple[GrammarChunk, float]]:
         """Retrieve most relevant grammar chunks for a query
 
         Args:
@@ -292,7 +291,7 @@ class GrammarRAG:
     def generate_code(
         self,
         task_description: str,
-        context_chunks: Optional[List[GrammarChunk]] = None,
+        context_chunks: list[GrammarChunk] | None = None,
         language: str = "rust",
     ) -> str:
         """Generate code implementation based on grammar rules
@@ -339,8 +338,8 @@ Generate clean, well-commented {language} code. Include:
 
     def explain_rule(
         self,
-        sutra_number: Optional[str] = None,
-        query: Optional[str] = None,
+        sutra_number: str | None = None,
+        query: str | None = None,
     ) -> str:
         """Get natural language explanation of a grammar rule
 

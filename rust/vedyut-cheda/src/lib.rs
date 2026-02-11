@@ -19,9 +19,12 @@ pub fn segment_text(text: &str) -> Vec<SegmentResult> {
     let mut lexicon = Lexicon::new();
     // Temporary hack: add the input text to the lexicon so it's always "valid" for now
     // in this simplified segmentation API.
-    lexicon.add(text.to_string(), vedyut_kosha::Entry::Avyaya(vedyut_kosha::AvyayaEntry {
-        word: text.to_string(),
-    }));
+    lexicon.add(
+        text.to_string(),
+        vedyut_kosha::Entry::Avyaya(vedyut_kosha::AvyayaEntry {
+            word: text.to_string(),
+        }),
+    );
 
     let segmenter = Segmenter::new(lexicon);
     segmenter.segment(text)

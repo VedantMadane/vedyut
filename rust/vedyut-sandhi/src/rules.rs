@@ -57,11 +57,7 @@ pub fn apply_sandhi(left: &str, right: &str) -> String {
     }
 
     // Default: concatenate
-    transliterate(
-        &format!("{}{}", l_slp1, r_slp1),
-        Scheme::Slp1,
-        scheme,
-    )
+    transliterate(&format!("{}{}", l_slp1, r_slp1), Scheme::Slp1, scheme)
 }
 
 fn is_vowel(c: char) -> bool {

@@ -9,7 +9,25 @@ Script is a **first-class parameter** throughout the API.
 __version__ = "0.1.0"
 
 from enum import Enum
-from typing import List, Optional, Dict, Any
+from typing import Any
+
+try:
+    from vedyut._core import (
+        py_analyze as _rust_analyze,
+    )
+    from vedyut._core import (
+        py_sanskritify as _rust_sanskritify,
+    )
+    from vedyut._core import (
+        py_segment as _rust_segment,
+    )
+    from vedyut._core import (
+        py_transliterate as _rust_transliterate,
+    )
+
+    RUST_AVAILABLE = True
+except ImportError:
+    RUST_AVAILABLE = False
 
 
 class Script(str, Enum):
@@ -85,7 +103,7 @@ def segment(
     text: str,
     script: Script = Script.DEVANAGARI,
     max_results: int = 10,
-) -> List[List[str]]:
+) -> list[list[str]]:
     """
     Segment Sanskrit text into words.
 
@@ -116,7 +134,7 @@ def segment(
 def analyze(
     word: str,
     script: Script = Script.DEVANAGARI,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Analyze morphological features of a Sanskrit word.
 
@@ -146,7 +164,7 @@ def generate_verb(
     purusha: str,
     vacana: str,
     output_script: Script = Script.DEVANAGARI,
-) -> List[str]:
+) -> list[str]:
     """
     Generate Sanskrit verb forms from root + grammatical features.
 
@@ -177,7 +195,7 @@ def generate_verb(
     return [f"{dhatu}+{lakara}+{purusha}+{vacana}"]
 
 
-def list_scripts() -> List[Script]:
+def list_scripts() -> list[Script]:
     """
     Get all supported scripts.
 
@@ -194,7 +212,7 @@ def sanskritify(
     preserve_meaning: bool = True,
     replace_urdu_arabic: bool = True,
     use_llm_fallback: bool = True,
-    llm_api_key: Optional[str] = None,
+    llm_api_key: str | None = None,
 ) -> str:
     """
     Make text in any Indian language more like refined Sanskrit.

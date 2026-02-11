@@ -1,7 +1,8 @@
 """Unified LLM client with swappable backends via LiteLLM"""
 
 import os
-from typing import List, Dict, Optional, Any
+from typing import Any
+
 import litellm
 from litellm import completion, embedding
 
@@ -28,11 +29,11 @@ class LLMClient:
 
     def __init__(
         self,
-        model: Optional[str] = None,
-        embedding_model: Optional[str] = None,
+        model: str | None = None,
+        embedding_model: str | None = None,
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
-        api_key: Optional[str] = None,
+        max_tokens: int | None = None,
+        api_key: str | None = None,
     ):
         """Initialize LLM client
 
@@ -54,7 +55,7 @@ class LLMClient:
         if api_key:
             litellm.api_key = api_key
 
-    def complete(self, messages: List[Dict[str, str]], **kwargs) -> str:
+    def complete(self, messages: list[dict[str, str]], **kwargs) -> str:
         """Complete a chat conversation
 
         Args:
@@ -73,7 +74,7 @@ class LLMClient:
         )
         return response.choices[0].message.content
 
-    def complete_with_json(self, messages: List[Dict[str, str]], **kwargs) -> Dict[str, Any]:
+    def complete_with_json(self, messages: list[dict[str, str]], **kwargs) -> dict[str, Any]:
         """Complete with structured JSON response
 
         Args:
@@ -101,7 +102,7 @@ class LLMClient:
         content = response.choices[0].message.content
         return json.loads(content)
 
-    def embed(self, texts: List[str]) -> List[List[float]]:
+    def embed(self, texts: list[str]) -> list[list[float]]:
         """Generate embeddings for texts
 
         Args:
@@ -116,7 +117,7 @@ class LLMClient:
         response = embedding(model=self.embedding_model, input=texts)
         return [item["embedding"] for item in response.data]
 
-    def embed_single(self, text: str) -> List[float]:
+    def embed_single(self, text: str) -> list[float]:
         """Generate embedding for a single text
 
         Args:
@@ -127,7 +128,7 @@ class LLMClient:
         """
         return self.embed([text])[0]
 
-    def stream(self, messages: List[Dict[str, str]], **kwargs):
+    def stream(self, messages: list[dict[str, str]], **kwargs):
         """Stream completion response (for long responses)
 
         Args:
@@ -152,7 +153,7 @@ class LLMClient:
 
 
 # Convenience function for quick use
-def quick_complete(prompt: str, model: Optional[str] = None) -> str:
+def quick_complete(prompt: str, model: str | None = None) -> str:
     """Quick one-off completion (not for production)
 
     Args:

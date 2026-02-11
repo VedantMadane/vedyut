@@ -8,7 +8,8 @@ This example shows how to:
 """
 
 import os
-from vedyut.llm import GrammarRAG, suggest_implementation, generate_test_cases, LLMClient
+
+from vedyut.llm import GrammarRAG, generate_test_cases, suggest_implementation
 
 
 def main():
