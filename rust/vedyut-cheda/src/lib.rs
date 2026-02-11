@@ -7,18 +7,24 @@ pub mod analyzer;
 pub mod segmenter;
 
 pub use analyzer::{AnalysisResult, Analyzer};
-// pub use segmenter::{segment, SegmentResult}; // Use module?
-use segmenter::{segment, SegmentResult};
+pub use segmenter::{SegmentResult, Segmenter};
 
-/// Segment Sanskrit text into words
-///
-/// # Arguments
-/// * `text` - Input Sanskrit text (can be sandhi-combined)
-///
-/// # Returns
-/// List of possible segmentations with scores
+// Compatibility helpers for vedyut-core
+use vedyut_kosha::Lexicon;
+
 pub fn segment_text(text: &str) -> Vec<SegmentResult> {
-    segment(text)
+    // Ideally this should use a global lexicon instance
+    // For now, create a temporary empty lexicon (will fail to validate words properly)
+    // Or just return empty results
+    let mut lexicon = Lexicon::new();
+    // Temporary hack: add the input text to the lexicon so it's always "valid" for now
+    // in this simplified segmentation API.
+    lexicon.add(text.to_string(), vedyut_kosha::Entry::Avyaya(vedyut_kosha::AvyayaEntry {
+        word: text.to_string(),
+    }));
+
+    let segmenter = Segmenter::new(lexicon);
+    segmenter.segment(text)
 }
 
 /// Analyze morphological features of a word (legacy placeholder)

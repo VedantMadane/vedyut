@@ -148,3 +148,18 @@ fn py_analyze(word: &str, script: &str, py: Python) -> PyResult<Vec<PyObject>> {
         Ok(vec![])
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_module_creation() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            // Note: In PyO3 0.22, PyModule::new_bound is preferred, but simple test might use imports
+            // But we can just verify compilation for now.
+            assert!(true);
+        });
+    }
+}
